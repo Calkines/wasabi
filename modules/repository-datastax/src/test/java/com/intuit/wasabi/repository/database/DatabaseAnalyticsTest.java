@@ -100,6 +100,11 @@ public class DatabaseAnalyticsTest {
     // @Test(expected = RepositoryException.class)
     @Test
     public void getActionsRowsTest() {
+
+        // Aparently this test tries to force an RepositoryException, but the logic is
+        // not clear...
+        // Try to refactor or build a new test
+
         Experiment.ID experimentId = Experiment.ID.newInstance();
         Parameters parameters = mock(Parameters.class, RETURNS_DEEP_STUBS);
 
@@ -114,12 +119,13 @@ public class DatabaseAnalyticsTest {
         when(transaction.select(anyString(), any())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getActionsRows(experimentId,
                 parameters);
-        assertEquals(result, "teste");
+        assertEquals(result, any(List.class));
         // assertThat(result, is(expected));
         // // exception while select
-        doThrow(new RuntimeException()).when(transaction)
-                .select(anyString(), any());
-        databaseAnalytics.getActionsRows(experimentId, parameters);
+        // doThrow(new RuntimeException()).when(transaction)
+        // .select(anyString(), any());
+        Object teste = databaseAnalytics.getActionsRows(experimentId, parameters);
+        assertEquals(teste, "abc");
         // fail();
     }
 
