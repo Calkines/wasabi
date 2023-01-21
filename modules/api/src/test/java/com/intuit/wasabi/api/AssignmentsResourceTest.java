@@ -62,7 +62,7 @@ import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssignmentsResourceTest {
 
     private static final String USERPASS = new String(
