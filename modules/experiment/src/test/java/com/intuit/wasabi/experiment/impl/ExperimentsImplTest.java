@@ -601,8 +601,10 @@ public class ExperimentsImplTest {
         Experiment update = mock(Experiment.class);
         Experiment current = mock(Experiment.class);
         UserInfo user = mock(UserInfo.class);
-        ExperimentsImpl expImpl = spy(new ExperimentsImpl(databaseRepository, cassandraRepository, experiments,
-                buckets, pages, priorities, validator, ruleCache, eventLog));
+
+        // ExperimentsImpl expImpl = spy(new ExperimentsImpl(databaseRepository,
+        // cassandraRepository, experiments,
+        // buckets, pages, priorities, validator, ruleCache, eventLog));
         when(current.getID()).thenReturn(experimentID);
         doReturn(current).when(expImpl).getExperiment(experimentID);
 
