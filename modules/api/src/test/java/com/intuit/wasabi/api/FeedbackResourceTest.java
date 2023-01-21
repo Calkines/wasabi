@@ -36,8 +36,8 @@ import static javax.ws.rs.core.Response.Status.CREATED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyCollection;
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -103,7 +103,7 @@ public class FeedbackResourceTest {
         verify(userFeedback).setUsername(username);
         verify(feedback).createUserFeedback(userFeedback);
         verify(httpHeader).headers(CREATED);
-        verify(responseBuilder, times(0)).entity(anyObject());
+        verify(responseBuilder, times(0)).entity(any());
         verify(responseBuilder).build();
     }
 

@@ -56,8 +56,8 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyCollection;
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -203,7 +203,7 @@ public class ApplicationsResourceTest {
         verify(authorization).checkUserPermissions(username, applicationName, UPDATE);
         verify(priorities).createPriorities(applicationName, experimentIDList, true);
         verify(httpHeader).headers(NO_CONTENT);
-        verify(responseBuilder, times(0)).entity(anyObject());
+        verify(responseBuilder, times(0)).entity(any());
         verify(responseBuilder).build();
     }
 
