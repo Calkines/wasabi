@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
  * Created on 2/25/16.
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AnalyticsImplTest {
 
     @Mock
