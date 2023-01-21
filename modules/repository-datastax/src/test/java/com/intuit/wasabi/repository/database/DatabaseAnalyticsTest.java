@@ -109,10 +109,10 @@ public class DatabaseAnalyticsTest {
         List<String> actions = new ArrayList<String>();
         actions.add("TEST_ACTION");
         when(parameters.getActions()).thenReturn(actions);
-        List<Map> expected = mock(List.class) :;
+        List<Map> expected = mock(List.class);
         when(transaction.select(anyString(), any())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getActionsRows(experimentId,
-        parameters);
+                parameters);
         // assertThat(result, is(expected));
         // // exception while select
         // doThrow(new RuntimeException()).when(transaction)
