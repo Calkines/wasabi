@@ -39,7 +39,7 @@ import java.util.Random;
 /**
  * Tests for {@link DatabaseFavoritesRepository}.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DatabaseFavoritesRepositoryTest {
 
     private DatabaseFavoritesRepository databaseFavoritesRepository;
@@ -65,7 +65,8 @@ public class DatabaseFavoritesRepositoryTest {
         Mockito.doReturn(transaction).when(transactionFactory).newTransaction();
 
         // instantiate repository
-        databaseFavoritesRepository = new DatabaseFavoritesRepository(transactionFactory, flyway, "com/intuit/wasabi/repository/impl/mysql/migration");
+        databaseFavoritesRepository = new DatabaseFavoritesRepository(transactionFactory, flyway,
+                "com/intuit/wasabi/repository/impl/mysql/migration");
     }
 
     @Test
