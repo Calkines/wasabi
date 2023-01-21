@@ -62,7 +62,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ExperimentsImplTest {
 
     // All required params for an experiment
@@ -101,7 +101,8 @@ public class ExperimentsImplTest {
         startTime = new Date();
         endTime = new Date(startTime.getTime() + 60000);
         samplingPercent = 0.5;
-        expImpl = new ExperimentsImpl(databaseRepository, cassandraRepository, experiments, buckets, pages, priorities, validator, ruleCache, eventLog);
+        expImpl = new ExperimentsImpl(databaseRepository, cassandraRepository, experiments, buckets, pages, priorities,
+                validator, ruleCache, eventLog);
         description = "Some description";
     }
 
@@ -128,12 +129,12 @@ public class ExperimentsImplTest {
                 .withStartTime(startTime)
                 .withEndTime(endTime)
                 .withDescription(description).build();
-        //Mock interactions
+        // Mock interactions
         doNothing().when(validator).validateNewExperiment(testExp);
         when(databaseRepository.createExperiment(testExp)).thenReturn(experimentID);
         doThrow(new RepositoryException()).when(cassandraRepository).createExperiment(testExp);
 
-        //Make actual call
+        // Make actual call
         try {
             expImpl.createExperiment(testExp, UserInfo.from(UserInfo.Username.valueOf("user")).build());
             fail("Expected RepositoryException.");
@@ -141,7 +142,7 @@ public class ExperimentsImplTest {
             assertEquals(e.getClass(), RepositoryException.class);
         }
 
-        //Verify execution
+        // Verify execution
         verify(databaseRepository, times(1)).createExperiment(any(NewExperiment.class));
         verify(databaseRepository, times(1)).deleteExperiment(testExp);
         verify(eventLog, times(0)).postEvent(any(ExperimentCreateEvent.class));
@@ -157,11 +158,11 @@ public class ExperimentsImplTest {
                 .withStartTime(startTime)
                 .withEndTime(endTime)
                 .withDescription(description).build();
-        //Mock interactions
+        // Mock interactions
         doNothing().when(validator).validateNewExperiment(testExp);
         doThrow(new RepositoryException()).when(databaseRepository).createExperiment(testExp);
 
-        //Make actual call
+        // Make actual call
         try {
             expImpl.createExperiment(testExp, UserInfo.from(UserInfo.Username.valueOf("user")).build());
             fail("Expected RepositoryException.");
@@ -169,12 +170,11 @@ public class ExperimentsImplTest {
             assertEquals(e.getClass(), RepositoryException.class);
         }
 
-        //Verify execution
+        // Verify execution
         verify(cassandraRepository, times(0)).createExperiment(any(NewExperiment.class));
         verify(databaseRepository, times(0)).deleteExperiment(testExp);
         verify(eventLog, times(0)).postEvent(any(ExperimentCreateEvent.class));
     }
-
 
     @Test
     public void testCreateExperimentPass() {
@@ -186,15 +186,15 @@ public class ExperimentsImplTest {
                 .withEndTime(endTime)
                 .withDescription(description).build();
 
-        //Mock interactions
+        // Mock interactions
         doNothing().when(validator).validateNewExperiment(testExp);
         when(cassandraRepository.createExperiment(testExp)).thenReturn(experimentID);
         when(databaseRepository.createExperiment(testExp)).thenReturn(experimentID);
 
-        //Make actual call
+        // Make actual call
         expImpl.createExperiment(testExp, UserInfo.from(UserInfo.Username.valueOf("user")).build());
 
-        //Verify execution
+        // Verify execution
         verify(databaseRepository, times(1)).createExperiment(any(NewExperiment.class));
         verify(cassandraRepository, times(1)).createExperiment(any(NewExperiment.class));
         verify(databaseRepository, times(0)).deleteExperiment(testExp);
@@ -382,24 +382,24 @@ public class ExperimentsImplTest {
         Date currentStartDate = mock(Date.class);
         Date updateStartDate = mock(Date.class);
         Date updateEndDate = mock(Date.class);
-        //update.getEndTime().before(NOW)
+        // update.getEndTime().before(NOW)
         when(mockUpdateExperiment.getEndTime()).thenReturn(updateEndDate);
         when(updateEndDate.before(any(Date.class))).thenReturn(true);
         assertIllegalExperimentEndTime(mockCurrentExperiment, mockUpdateExperiment);
         when(updateEndDate.before(any(Date.class))).thenReturn(false);
-        //current.getEndTime().before(NOW)
+        // current.getEndTime().before(NOW)
         Date currentEndDate = mock(Date.class);
         when(mockCurrentExperiment.getEndTime()).thenReturn(currentEndDate);
         when(currentEndDate.before(any(Date.class))).thenReturn(true);
         assertIllegalExperimentEndTime(mockCurrentExperiment, mockUpdateExperiment);
         when(currentEndDate.before(any(Date.class))).thenReturn(false);
-        //update.getStartTime is null
+        // update.getStartTime is null
         when(mockUpdateExperiment.getStartTime()).thenReturn(null);
         when(mockUpdateExperiment.getEndTime()).thenReturn(updateEndDate);
         when(mockCurrentExperiment.getStartTime()).thenReturn(currentStartDate);
         when(updateEndDate.before(currentStartDate)).thenReturn(true);
         assertIllegalExperimentEndTime(mockCurrentExperiment, mockUpdateExperiment);
-        //update.getStartTime is not null
+        // update.getStartTime is not null
         when(mockUpdateExperiment.getStartTime()).thenReturn(updateStartDate);
         when(updateEndDate.before(updateStartDate)).thenReturn(true);
         assertIllegalExperimentEndTime(mockCurrentExperiment, mockUpdateExperiment);
@@ -423,22 +423,22 @@ public class ExperimentsImplTest {
         Date updateStartDate = mock(Date.class);
         when(mockUpdateExperiment.getStartTime()).thenReturn(updateStartDate);
         when(updateStartDate.before(any(Date.class))).thenReturn(true);
-        //update.getStartTime().before NOW
+        // update.getStartTime().before NOW
         assertIllegalExperimentStartTime(mockCurrentExperiment, mockUpdateExperiment);
         when(updateStartDate.before(any(Date.class))).thenReturn(false);
-        //current.getStartTime().before NOW
+        // current.getStartTime().before NOW
         Date currentStartDate = mock(Date.class);
         when(mockCurrentExperiment.getStartTime()).thenReturn(currentStartDate);
         when(currentStartDate.before(any(Date.class))).thenReturn(true);
         assertIllegalExperimentStartTime(mockCurrentExperiment, mockUpdateExperiment);
         when(currentStartDate.before(any(Date.class))).thenReturn(false);
-        //update.getEndTime is null
+        // update.getEndTime is null
         when(mockUpdateExperiment.getEndTime()).thenReturn(null);
         when(mockCurrentExperiment.getEndTime()).thenReturn(currentEndDate);
         when(updateStartDate.after(currentEndDate)).thenReturn(true);
         assertIllegalExperimentStartTime(mockCurrentExperiment, mockUpdateExperiment);
         when(currentStartDate.before(any(Date.class))).thenReturn(false);
-        //update.getEndTime is not null
+        // update.getEndTime is not null
         when(mockUpdateExperiment.getEndTime()).thenReturn(updateEndDate);
         when(updateStartDate.after(updateEndDate)).thenReturn(true);
         assertIllegalExperimentStartTime(mockCurrentExperiment, mockUpdateExperiment);
@@ -463,7 +463,7 @@ public class ExperimentsImplTest {
         doNothing().when(expImpl).checkForIllegalExperimentStartTime(mockCurrentExperiment, mockUpdateExperiment);
         doNothing().when(expImpl).checkForIllegalExperimentEndTime(mockCurrentExperiment, mockUpdateExperiment);
         when(mockCurrentExperiment.getState()).thenReturn(Experiment.State.RUNNING);
-        //Test the Application Name different
+        // Test the Application Name different
         when(mockCurrentExperiment.getApplicationName()).thenReturn(Application.Name.valueOf("A"));
         when(mockUpdateExperiment.getApplicationName()).thenReturn(Application.Name.valueOf("B"));
         try {
@@ -472,7 +472,7 @@ public class ExperimentsImplTest {
             assertEquals(e.getClass(), IllegalArgumentException.class);
             when(mockUpdateExperiment.getApplicationName()).thenReturn(Application.Name.valueOf("A"));
         }
-        //Test the Label difference
+        // Test the Label difference
         when(mockCurrentExperiment.getLabel()).thenReturn(Experiment.Label.valueOf("A"));
         when(mockUpdateExperiment.getLabel()).thenReturn(Experiment.Label.valueOf("B"));
         try {
@@ -481,14 +481,14 @@ public class ExperimentsImplTest {
             assertEquals(e.getClass(), IllegalArgumentException.class);
             when(mockUpdateExperiment.getLabel()).thenReturn(Experiment.Label.valueOf("A"));
         }
-        //Test the start time difference
+        // Test the start time difference
         Date updateStartDate = mock(Date.class);
         Date currentStartDate = mock(Date.class);
         when(mockCurrentExperiment.getStartTime()).thenReturn(currentStartDate);
         when(mockUpdateExperiment.getStartTime()).thenReturn(updateStartDate);
         expImpl.checkForIllegalPausedRunningUpdate(mockCurrentExperiment, mockUpdateExperiment);
         verify(expImpl, times(1)).checkForIllegalExperimentStartTime(mockCurrentExperiment, mockUpdateExperiment);
-        //Test the end time different
+        // Test the end time different
         when(mockUpdateExperiment.getStartTime()).thenReturn(currentStartDate);
         when(mockUpdateExperiment.getEndTime()).thenReturn(updateStartDate);
         when(mockCurrentExperiment.getEndTime()).thenReturn(currentStartDate);
@@ -498,25 +498,28 @@ public class ExperimentsImplTest {
     }
 
     // FIXME:
-//    @Ignore("FIXME")
-//    @Test
-//    public void testUpdateSegmentationRule() {
-//        Experiment testExp = Experiment.withID(experimentID)
-//                .withApplicationName(testApp)
-//                .withLabel(testLabel)
-//                .withSamplingPercent(samplingPercent)
-//                .withStartTime(startTime)
-//                .withEndTime(endTime).build();
-//        when(ruleCache.getRule(experimentID)).thenReturn(null);
-//        expImpl.updateSegmentationRule(testExp, UserInfo.from(UserInfo.Username.valueOf("userinfo")).build());
-//        verify(ruleCache, atLeastOnce()).clearRule(experimentID);
-//
-//        testExp.setRule("(mock == true)");
-//        com.intuit.hyrule.Rule mockRule = mock(com.intuit.hyrule.Rule.class);
-//        when(ruleCache.getRule(experimentID)).thenReturn(mockRule);
-//        expImpl.updateSegmentationRule(testExp, UserInfo.from(UserInfo.Username.valueOf("userinfo")).build());
-//        verify(ruleCache, atLeastOnce()).setRule(eq(experimentID), any(com.intuit.hyrule.Rule.class));
-//    }
+    // @Ignore("FIXME")
+    // @Test
+    // public void testUpdateSegmentationRule() {
+    // Experiment testExp = Experiment.withID(experimentID)
+    // .withApplicationName(testApp)
+    // .withLabel(testLabel)
+    // .withSamplingPercent(samplingPercent)
+    // .withStartTime(startTime)
+    // .withEndTime(endTime).build();
+    // when(ruleCache.getRule(experimentID)).thenReturn(null);
+    // expImpl.updateSegmentationRule(testExp,
+    // UserInfo.from(UserInfo.Username.valueOf("userinfo")).build());
+    // verify(ruleCache, atLeastOnce()).clearRule(experimentID);
+    //
+    // testExp.setRule("(mock == true)");
+    // com.intuit.hyrule.Rule mockRule = mock(com.intuit.hyrule.Rule.class);
+    // when(ruleCache.getRule(experimentID)).thenReturn(mockRule);
+    // expImpl.updateSegmentationRule(testExp,
+    // UserInfo.from(UserInfo.Username.valueOf("userinfo")).build());
+    // verify(ruleCache, atLeastOnce()).setRule(eq(experimentID),
+    // any(com.intuit.hyrule.Rule.class));
+    // }
 
     @Test(expected = ExperimentNotFoundException.class)
     public void testUpdateExperimentNull() {
@@ -584,8 +587,11 @@ public class ExperimentsImplTest {
         verify(builder, times(1)).withIsRapidExperiment(true);
         verify(builder, times(1)).withUserCap(2);
         verify(builder, times(1)).withRule("Rule-2");
-        verify(builder, times(1)).withLabel(Experiment.Label.valueOf("Label-2")); //change to this does not trigger experiment audit info
-        verify(builder, times(1)).withApplicationName(Application.Name.valueOf("App2")); //change to this does not trigger experiment audit info
+        verify(builder, times(1)).withLabel(Experiment.Label.valueOf("Label-2")); // change to this does not trigger
+                                                                                  // experiment audit info
+        verify(builder, times(1)).withApplicationName(Application.Name.valueOf("App2")); // change to this does not
+                                                                                         // trigger experiment audit
+                                                                                         // info
         verify(changeList, times(11)).add(any(Experiment.ExperimentAuditInfo.class));
 
     }
@@ -631,7 +637,8 @@ public class ExperimentsImplTest {
         verify(priorities, times(1)).appendToPriorityList(any(Experiment.ID.class));
         verify(cassandraRepository, times(1)).logExperimentChanges(any(Experiment.ID.class), any(List.class));
         verify(priorities, times(2)).removeFromPriorityList(any(Application.Name.class), any(Experiment.ID.class));
-        verify(pages, times(1)).erasePageData(any(Application.Name.class), any(Experiment.ID.class), any(UserInfo.class));
+        verify(pages, times(1)).erasePageData(any(Application.Name.class), any(Experiment.ID.class),
+                any(UserInfo.class));
     }
 
 }
