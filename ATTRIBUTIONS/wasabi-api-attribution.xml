@@ -2303,7 +2303,7 @@
          <name>Project Lombok</name>
          <groupId>org.projectlombok</groupId>
          <artifactId>lombok</artifactId>
-         <version>1.16.10</version>
+         <version>1.18.24</version>
          <projectUrl>https://projectlombok.org</projectUrl>
          <type>jar</type>
          <licenses>
