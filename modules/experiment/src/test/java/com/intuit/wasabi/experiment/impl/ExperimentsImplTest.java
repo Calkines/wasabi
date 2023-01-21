@@ -47,7 +47,9 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -613,8 +615,13 @@ public class ExperimentsImplTest {
         doReturn(false).when(_expImpl).buildUpdatedExperiment(eq(current), eq(update),
                 any(Experiment.Builder.class), any(List.class));
 
-        Experiment result = _expImpl.updateExperiment(experimentID, update, user);
-        assertEquals(experiments.getExperiment(experimentID).getID(), experimentID);
+        List<Experiment> exps = _expImpl.getExperiments().getExperiments();
+        // exps.contains(current);
+        assertTrue(exps.contains(current));
+        assertFalse(exps.contains(update));
+        _expImpl.updateExperiment(experimentID, update, user);
+        assertTrue(exps.contains(update));
+        // assertEquals(exps.getExperiment(experimentID), experimentID);
         // verify(experiments, times(1)).checkStateTransition(any(Experiment.ID.class),
         // any(Experiment.State.class),
         // any(Experiment.State.class));
