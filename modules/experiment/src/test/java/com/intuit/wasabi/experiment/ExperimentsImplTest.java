@@ -51,8 +51,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -100,7 +98,8 @@ public class ExperimentsImplTest {
         startTime = new Date();
         endTime = new Date(startTime.getTime() + 60000);
         samplingPercent = 0.5;
-        expImpl = new ExperimentsImpl(databaseRepository, cassandraRepository, experiments, buckets, pages, priorities, validator, ruleCache, eventLog);
+        expImpl = new ExperimentsImpl(databaseRepository, cassandraRepository, experiments, buckets, pages, priorities,
+                validator, ruleCache, eventLog);
         description = "Some description";
     }
 
@@ -447,7 +446,6 @@ public class ExperimentsImplTest {
         then(changeList.size()).isEqualTo(0);
         then(result).isEqualTo(true);
     }
-
 
     @Test
     public void testBuildUpdateExperimentSamplingPercentage() {

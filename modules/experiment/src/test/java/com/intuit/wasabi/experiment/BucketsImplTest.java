@@ -46,6 +46,7 @@ import java.util.List;
 import static com.googlecode.catchexception.CatchException.verifyException;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -279,8 +280,8 @@ public class BucketsImplTest {
 
                 // The method instantiates an object and sends it as an argument so we have to
                 // use matchers
-                when(buckets.getBucketChangeList(Matchers.<Bucket>any(), Matchers.<Bucket>any(),
-                                Matchers.<Bucket.Builder>any())).thenReturn(changeList);
+                when(buckets.getBucketChangeList(any(Bucket.class), any(Bucket.class),
+                                any(Bucket.Builder.class))).thenReturn(changeList);
                 when(cassandraRepository.updateBucket(bucket)).thenReturn(updates);
 
                 Bucket result = bucketsImpl.updateBucket(experimentID, bucketLabel, updates, changeUser);
