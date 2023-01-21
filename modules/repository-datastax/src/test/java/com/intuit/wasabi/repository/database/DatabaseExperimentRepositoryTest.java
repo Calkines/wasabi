@@ -407,18 +407,18 @@ public class DatabaseExperimentRepositoryTest {
                 assertThat(bucket.getLabel().toString().trim().isEmpty(), is(not(nullValue())));
 
                 when(bucket.getAllocationPercent()).thenReturn(0.5);
-                when(transaction.update(anyString(), any())).thenReturn(1);
+                when(transaction.update(anyString(), Matchers.<Object>anyVararg())).thenReturn(1);
                 when(bucket.isControl()).thenReturn(false);
 
                 Bucket result = repository.updateBucket(bucket);
 
                 assertThat(result, is(bucket));
 
-                verify(transaction, times(1)).update(anyString(), any());
+                verify(transaction, times(1)).update(anyString(), Matchers.<Object>anyVararg());
                 when(bucket.isControl()).thenReturn(true);
                 result = repository.updateBucket(bucket);
                 assertThat(result, is(bucket));
-                verify(transaction, times(3)).update(anyString(), any());
+                verify(transaction, times(3)).update(anyString(), Matchers.<Object>anyVararg());
         }
 
         @Test
