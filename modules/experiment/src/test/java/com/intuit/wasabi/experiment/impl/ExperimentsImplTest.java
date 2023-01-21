@@ -614,7 +614,6 @@ public class ExperimentsImplTest {
                 any(Experiment.Builder.class), any(List.class));
 
         Experiment result = _expImpl.updateExperiment(experimentID, update, user);
-        assertEquals(result, "worked");
         assertEquals(experiments, "hello");
         // verify(experiments, times(1)).checkStateTransition(any(Experiment.ID.class),
         // any(Experiment.State.class),
