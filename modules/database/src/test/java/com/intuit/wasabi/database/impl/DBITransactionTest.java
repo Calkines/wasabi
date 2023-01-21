@@ -33,7 +33,7 @@ import java.sql.Connection;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DBITransactionTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -72,9 +72,8 @@ public class DBITransactionTest {
     public void testInsert() throws Exception {
         given(handle.createStatement("q1")).willReturn(update);
         given(update.execute()).willReturn(1);
-        transaction.insert("q1", new Object[]{});
+        transaction.insert("q1", new Object[] {});
     }
-
 
     @Test
     public void testTransactionThrowsIllegalArgumentException() {
