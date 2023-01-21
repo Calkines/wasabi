@@ -116,7 +116,7 @@ public class DatabaseAnalyticsTest {
         // // exception while select
         doThrow(new RuntimeException()).when(transaction)
                 .select(anyString(), any());
-        // databaseAnalytics.getActionsRows(experimentId, parameters);
+        databaseAnalytics.getActionsRows(experimentId, parameters);
         // fail();
     }
 
