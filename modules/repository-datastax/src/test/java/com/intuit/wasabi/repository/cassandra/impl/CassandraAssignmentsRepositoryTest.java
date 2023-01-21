@@ -100,7 +100,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CassandraAssignmentsRepositoryTest {
         private final Logger logger = LoggerFactory.getLogger(CassandraAssignmentsRepositoryTest.class);
         @Rule
