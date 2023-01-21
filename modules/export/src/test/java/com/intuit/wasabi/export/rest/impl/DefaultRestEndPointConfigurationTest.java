@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created on 4/13/16.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DefaultRestEndPointConfigurationTest {
     Properties properties;
     DefaultRestEndPointConfiguration defaultRestEndPointConfiguration;
