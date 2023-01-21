@@ -68,10 +68,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
     }
 
     /*
-     * @see
-     * com.intuit.wasabi.repository.AnalyticsRepository#getRollupRows(com.intuit.
-     * wasabi.experimentobjects.Experiment.ID, java.lang.String,
-     * com.intuit.wasabi.analyticsobjects.Parameters)
+     * @see com.intuit.wasabi.repository.AnalyticsRepository#getRollupRows(com.intuit.wasabi.experimentobjects.Experiment.ID, java.lang.String, com.intuit.wasabi.analyticsobjects.Parameters)
      */
     @Override
     public List<Map> getRollupRows(Experiment.ID experimentId, String rollupDate, Parameters parameters)
@@ -80,9 +77,8 @@ public class DatabaseAnalytics implements AnalyticsRepository {
         // TODO enable direct mapping of DateMidnight
         List rollupRows;
         try {
-            // build and execute SQL queries for counts from rollups
-            String sqlQuery = "select bucket_label as bid, action, impression_count as ic, impression_user_count as iuc, "
-                    +
+            //build and execute SQL queries for counts from rollups
+            String sqlQuery = "select bucket_label as bid, action, impression_count as ic, impression_user_count as iuc, " +
                     "action_count as ac, action_user_count as auc from experiment_rollup " +
                     "where experiment_id = ? and cumulative = ? and day = ? and context = ?";
 
@@ -97,17 +93,14 @@ public class DatabaseAnalytics implements AnalyticsRepository {
     }
 
     /*
-     * @see
-     * com.intuit.wasabi.repository.AnalyticsRepository#getActionsRows(com.intuit.
-     * wasabi.experimentobjects.Experiment.ID,
-     * com.intuit.wasabi.analyticsobjects.Parameters)
+     * @see com.intuit.wasabi.repository.AnalyticsRepository#getActionsRows(com.intuit.wasabi.experimentobjects.Experiment.ID, com.intuit.wasabi.analyticsobjects.Parameters)
      */
     @Override
     public List<Map> getActionsRows(Experiment.ID experimentID, Parameters parameters)
             throws RepositoryException {
 
         try {
-            // build and execute SQL queries for counts
+            //build and execute SQL queries for counts
             Date from_ts = parameters.getFromTime();
             Date to_ts = parameters.getToTime();
             String sqlBase = "bucket_label as bid, count(user_id) as c, count(distinct user_id) as cu";
@@ -115,6 +108,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
             List params = new ArrayList();
             params.add(experimentID);
             params.add(parameters.getContext().getContext());
+
 
             if (from_ts != null) {
                 params.add(from_ts);
@@ -135,6 +129,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
                     sqlParams.toString() + " group by bucket_label, action";
             List<Map> actionsRows = transaction.select(sqlActions, bucketSqlData);
 
+
             return actionsRows;
 
         } catch (Exception e) {
@@ -149,10 +144,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
      * @throws RepositoryException system exception
      */
     /*
-     * @see
-     * com.intuit.wasabi.repository.AnalyticsRepository#getJointActions(com.intuit.
-     * wasabi.experimentobjects.Experiment.ID,
-     * com.intuit.wasabi.analyticsobjects.Parameters)
+     * @see com.intuit.wasabi.repository.AnalyticsRepository#getJointActions(com.intuit.wasabi.experimentobjects.Experiment.ID, com.intuit.wasabi.analyticsobjects.Parameters)
      */
     @Override
     public List<Map> getJointActions(Experiment.ID experimentID, Parameters parameters)
@@ -160,7 +152,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
 
         try {
 
-            // build and execute SQL queries for counts
+            //build and execute SQL queries for counts
             Date from_ts = parameters.getFromTime();
             Date to_ts = parameters.getToTime();
             String sqlBase = "bucket_label as bid, count(user_id) as c, count(distinct user_id) as cu";
@@ -168,6 +160,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
             List params = new ArrayList();
             params.add(experimentID);
             params.add(parameters.getContext().getContext());
+
 
             if (from_ts != null) {
                 params.add(from_ts);
@@ -213,19 +206,15 @@ public class DatabaseAnalytics implements AnalyticsRepository {
     }
 
     /*
-     * @see
-     * com.intuit.wasabi.repository.AnalyticsRepository#getImpressionRows(com.intuit
-     * .wasabi.experimentobjects.Experiment.ID,
-     * com.intuit.wasabi.analyticsobjects.Parameters)
+     * @see com.intuit.wasabi.repository.AnalyticsRepository#getImpressionRows(com.intuit.wasabi.experimentobjects.Experiment.ID, com.intuit.wasabi.analyticsobjects.Parameters)
      */
     @Override
     public List<Map> getImpressionRows(Experiment.ID experimentID, Parameters parameters)
             throws RepositoryException {
 
         try {
-            System.out.println(parameters);
-            System.out.println(experimentID);
-            // build and execute SQL queries for counts
+
+            //build and execute SQL queries for counts
             Date from_ts = parameters.getFromTime();
             Date to_ts = parameters.getToTime();
             String sqlBase = "bucket_label as bid, count(user_id) as c, count(distinct user_id) as cu";
@@ -233,6 +222,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
             List params = new ArrayList();
             params.add(experimentID);
             params.add(parameters.getContext().getContext());
+
 
             if (from_ts != null) {
                 params.add(from_ts);
@@ -258,9 +248,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
     }
 
     /*
-     * @see
-     * com.intuit.wasabi.repository.AnalyticsRepository#getEmptyBuckets(com.intuit.
-     * wasabi.experimentobjects.Experiment.ID)
+     * @see com.intuit.wasabi.repository.AnalyticsRepository#getEmptyBuckets(com.intuit.wasabi.experimentobjects.Experiment.ID)
      */
     @Override
     public Map<Bucket.Label, BucketCounts> getEmptyBuckets(Experiment.ID experimentID)
@@ -278,7 +266,8 @@ public class DatabaseAnalytics implements AnalyticsRepository {
             Map<Bucket.Label, BucketCounts> buckets = new HashMap<>();
 
             for (Map bucketRow : bucketRows) {
-                Bucket.Label externalLabel = Bucket.Label.valueOf((String) bucketRow.get("label"));
+                Bucket.Label externalLabel =
+                        Bucket.Label.valueOf((String) bucketRow.get("label"));
                 BucketCounts bucket = blankBucket.clone();
 
                 bucket.setLabel(externalLabel);
@@ -292,10 +281,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
     }
 
     /*
-     * @see
-     * com.intuit.wasabi.repository.AnalyticsRepository#getCountsFromRollups(com.
-     * intuit.wasabi.experimentobjects.Experiment.ID,
-     * com.intuit.wasabi.analyticsobjects.Parameters)
+     * @see com.intuit.wasabi.repository.AnalyticsRepository#getCountsFromRollups(com.intuit.wasabi.experimentobjects.Experiment.ID, com.intuit.wasabi.analyticsobjects.Parameters)
      */
     @Override
     public List<Map> getCountsFromRollups(Experiment.ID experimentID, Parameters parameters)
@@ -303,7 +289,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
 
         try {
 
-            // build and execute SQL queries for counts from rollups
+            //build and execute SQL queries for counts from rollups
             String sqlQuery = "select day, bucket_label as bid, cumulative as c, action, impression_count as ic, " +
                     "impression_user_count as iuc, action_count as ac, action_user_count as auc " +
                     "from experiment_rollup where experiment_id = ? and context = ? order by day asc";
@@ -316,10 +302,8 @@ public class DatabaseAnalytics implements AnalyticsRepository {
     }
 
     /**
-     * Get the date of the most recent rollup. Check to make sure that the toTime
-     * specified is &gt;= last rollup
-     * Return true if the date of the most recent rollup is before the specified
-     * toTime
+     * Get the date of the most recent rollup.  Check to make sure that the toTime specified is &gt;= last rollup
+     * Return true if the date of the most recent rollup is before the specified toTime
      *
      * @param experiment experiment object
      * @param parameters parameter object
@@ -333,6 +317,7 @@ public class DatabaseAnalytics implements AnalyticsRepository {
 
         try {
             Timestamp toTime = new Timestamp(to.getTime());
+
 
             final String SQL_SELECT_ID = "SELECT day FROM experiment_rollup " +
                     "WHERE experiment_id=? AND context=? ORDER BY day";
