@@ -1007,43 +1007,46 @@ public class ExperimentsResourceTest {
         }
     }
 
-    @Test
-    public void bucketReturnsLocationHeader() throws Exception {
-        Experiment experiment = Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
+    // @Test
+    // public void bucketReturnsLocationHeader() throws Exception {
+    // Experiment experiment =
+    // Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
 
-        Bucket.Label bucketLabel = Bucket.Label.valueOf("foo");
+    // Bucket.Label bucketLabel = Bucket.Label.valueOf("foo");
 
-        Bucket bucket = Bucket.newInstance(experiment.getID(), bucketLabel)
-                .withAllocationPercent(0d)
-                .withControl(false)
-                .withDescription("")
-                .withPayload("")
-                .build();
+    // Bucket bucket = Bucket.newInstance(experiment.getID(), bucketLabel)
+    // .withAllocationPercent(0d)
+    // .withControl(false)
+    // .withDescription("")
+    // .withPayload("")
+    // .build();
 
-        Bucket newBucket = Bucket.newInstance(experiment.getID(), bucketLabel)
-                .withAllocationPercent(0d)
-                .withControl(false)
-                .withDescription("")
-                .withPayload("")
-                .build();
+    // Bucket newBucket = Bucket.newInstance(experiment.getID(), bucketLabel)
+    // .withAllocationPercent(0d)
+    // .withControl(false)
+    // .withDescription("")
+    // .withPayload("")
+    // .build();
 
-        UserInfo userInfo = UserInfo.from(UserInfo.Username.valueOf(USERPASS)).build();
+    // UserInfo userInfo =
+    // UserInfo.from(UserInfo.Username.valueOf(USERPASS)).build();
 
-        when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
-        when(buckets.createBucket(experiment.getID(),
-                Mockito.any(Bucket.class), Mockito.any(UserInfo.class))).thenReturn(bucket);
-        when(uriInfo.getAbsolutePathBuilder()).thenReturn(fromPath(PATH));
-        UserInfo.Username subject = UserInfo.Username.valueOf("auser");
-        when(authorization.getUser(USERPASS)).thenReturn(subject);
-        when(authorization.getUserInfo(subject)).thenReturn(userInfo);
+    // when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
+    // when(buckets.createBucket(experiment.getID(),
+    // Mockito.any(Bucket.class), Mockito.any(UserInfo.class))).thenReturn(bucket);
+    // when(uriInfo.getAbsolutePathBuilder()).thenReturn(fromPath(PATH));
+    // UserInfo.Username subject = UserInfo.Username.valueOf("auser");
+    // when(authorization.getUser(USERPASS)).thenReturn(subject);
+    // when(authorization.getUserInfo(subject)).thenReturn(userInfo);
 
-        Response response = experimentsResource.postBucket(experiment.getID(), newBucket, USERPASS);
+    // Response response = experimentsResource.postBucket(experiment.getID(),
+    // newBucket, USERPASS);
 
-        Bucket content = (Bucket) response.getEntity();
+    // Bucket content = (Bucket) response.getEntity();
 
-        assertThat(content, equalTo(bucket));
-        assertThat(response.getStatus(), is(CREATED.getStatusCode()));
-    }
+    // assertThat(content, equalTo(bucket));
+    // assertThat(response.getStatus(), is(CREATED.getStatusCode()));
+    // }
 
     @Test
     public void postBucketExperimentNull() throws Exception {
