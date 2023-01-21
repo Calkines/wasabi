@@ -112,8 +112,8 @@ public class DatabaseAnalyticsTest {
         when(parameters.getActions()).thenReturn(actions);
         List<Map> expected = mock(List.class);
         when(transaction.select(anyString(), any())).thenReturn(expected);
-        List<Map> result = databaseAnalytics.getActionsRows(experimentId, parameters);
         assertEquals(parameters.getContext().getContext(), "TEST");
+        List<Map> result = databaseAnalytics.getActionsRows(experimentId, parameters);
         assertThat(result, is(expected));
         // exception while select
         doThrow(new RuntimeException()).when(transaction)
