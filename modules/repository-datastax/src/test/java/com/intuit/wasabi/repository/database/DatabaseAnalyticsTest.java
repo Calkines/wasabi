@@ -98,7 +98,6 @@ public class DatabaseAnalyticsTest {
     // fail();
     // }
 
-    // @Test(expected = RepositoryException.class)
     @Test
     public void getActionsRowsTest() {
 
@@ -121,13 +120,6 @@ public class DatabaseAnalyticsTest {
         List<Map> result = databaseAnalytics.getActionsRows(experimentId,
                 parameters);
         assertEquals(result, Collections.emptyList());
-        // assertThat(result, is(expected));
-        // // exception while select
-        // doThrow(new RuntimeException()).when(transaction)
-        // .select(anyString(), any());
-        Object teste = databaseAnalytics.getActionsRows(experimentId, parameters);
-        assertEquals(teste, "abc");
-        // fail();
     }
 
     // @Test(expected = RepositoryException.class)
