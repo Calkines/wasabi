@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -104,9 +104,9 @@ public class EventsEnvelopeTest {
         WasabiClientException jce = new ApplicationNotFoundException("");
         given(getLogger(any(Class.class))).willReturn(logger);
         logger.warn(any(String.class));
-        BDDMockito.willThrow(jce).given(transaction).
-                insert(any(String.class), any(String.class), any(Experiment.ID.class),
-                        any(Bucket.Label.class), any(String.class), any(Date.class), any(String.class));
+        BDDMockito.willThrow(jce).given(transaction).insert(any(String.class), any(String.class),
+                any(Experiment.ID.class),
+                any(Bucket.Label.class), any(String.class), any(Date.class), any(String.class));
         eventsEnvelope.run();
 
         verify(event, times(1)).getName();
@@ -133,4 +133,3 @@ public class EventsEnvelopeTest {
     }
 
 }
-

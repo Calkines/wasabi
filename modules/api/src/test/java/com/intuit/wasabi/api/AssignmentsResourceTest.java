@@ -57,15 +57,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AssignmentsResourceTest {
 
-    private static final String USERPASS = new String(encodeBase64("admin@example.com:admin01".getBytes(forName("UTF-8"))), forName("UTF-8"));
+    private static final String USERPASS = new String(
+            encodeBase64("admin@example.com:admin01".getBytes(forName("UTF-8"))), forName("UTF-8"));
     private static final String AUTHHEADER = "Basic: " + USERPASS;
     private static final UserInfo.Username USER = UserInfo.Username.valueOf("admin@example.com");
     private static final String HOST_IP = "hostIP";
@@ -168,8 +169,9 @@ public class AssignmentsResourceTest {
     public void getBatchAssignmentExp() throws Exception {
         List<Assignment> myAssignments = new ArrayList<>();
         when(assignments.doBatchAssignments(userID, applicationName, context,
-                CREATE, FORCE_IN_EXPERIMENT, headers, experimentBatch,forceProfileCheck)).thenReturn(myAssignments);
-        assertNotNull(resource.getBatchAssignments(applicationName, userID, context, CREATE, experimentBatch, forceProfileCheck, headers));
+                CREATE, FORCE_IN_EXPERIMENT, headers, experimentBatch, forceProfileCheck)).thenReturn(myAssignments);
+        assertNotNull(resource.getBatchAssignments(applicationName, userID, context, CREATE, experimentBatch,
+                forceProfileCheck, headers));
     }
 
     @Test
@@ -214,7 +216,8 @@ public class AssignmentsResourceTest {
         List<Assignment> assignmentsFromPage = new ArrayList<>();
 
         when(assignments.doPageAssignments(applicationName, pageName, userID, context,
-                createAssignment, ignoreSamplingPercent, headers, null,forceProfileCheck)).thenReturn(assignmentsFromPage);
+                createAssignment, ignoreSamplingPercent, headers, null, forceProfileCheck))
+                .thenReturn(assignmentsFromPage);
 
         assertNotNull(resource.getBatchAssignmentForPage(applicationName, pageName, userID, createAssignment,
                 ignoreSamplingPercent, context, headers));
@@ -225,7 +228,8 @@ public class AssignmentsResourceTest {
         List<Assignment> assignmentsFromPage = new ArrayList<>();
 
         when(assignments.doPageAssignments(applicationName, pageName, userID, context,
-                createAssignment, ignoreSamplingPercent, headers, segmentationProfile,forceProfileCheck)).thenReturn(assignmentsFromPage);
+                createAssignment, ignoreSamplingPercent, headers, segmentationProfile, forceProfileCheck))
+                .thenReturn(assignmentsFromPage);
 
         assertNotNull(resource.postBatchAssignmentForPage(applicationName, pageName, userID, createAssignment,
                 ignoreSamplingPercent, context, segmentationProfile, forceProfileCheck, headers));
@@ -274,7 +278,6 @@ public class AssignmentsResourceTest {
         } catch (AuthenticationException ignored) {
         }
     }
-
 
     @Test
     public void clearAssignmentsMetadataCacheTest() throws Exception {

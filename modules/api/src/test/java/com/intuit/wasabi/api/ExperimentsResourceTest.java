@@ -78,7 +78,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -88,7 +88,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ExperimentsResourceTest {
 
-    private static final String USERPASS = new String(encodeBase64("admin@example.com:admin01".getBytes(forName("UTF-8"))), forName("UTF-8"));
+    private static final String USERPASS = new String(
+            encodeBase64("admin@example.com:admin01".getBytes(forName("UTF-8"))), forName("UTF-8"));
     private static final String AUTHHEADER = "Basic: " + USERPASS;
     private static final UserInfo.Username USER = UserInfo.Username.valueOf("admin@example.com");
     private static final UserInfo USERINFO = UserInfo.from(USER).build();
@@ -134,7 +135,6 @@ public class ExperimentsResourceTest {
     private String timeZoneString = "UTC";
     private String description = "Example hypothesis.";
 
-
     private PaginationHelper<Experiment> paginationHelper = new PaginationHelper<>(
             new ExperimentFilter(), new ExperimentComparator());
 
@@ -156,7 +156,8 @@ public class ExperimentsResourceTest {
                 .build();
 
         experimentsResource = new ExperimentsResource(experiments, eventsExport, assignments,
-                authorization, buckets, mutex, pages, priorities, favorites, "US/New York", "YYYY-mm-DD", new HttpHeader("MyApp-???", "600"), paginationHelper);
+                authorization, buckets, mutex, pages, priorities, favorites, "US/New York", "YYYY-mm-DD",
+                new HttpHeader("MyApp-???", "600"), paginationHelper);
         doReturn(Collections.emptyList()).when(favorites).getFavorites(Mockito.any());
     }
 
@@ -198,7 +199,7 @@ public class ExperimentsResourceTest {
         // fewer allowed experiments
         when(authorization.getUser(AUTHHEADER)).thenReturn(USER);
 
-        //this throw is so that only the allowed (TESTAPP) experiments get returned
+        // this throw is so that only the allowed (TESTAPP) experiments get returned
         doThrow(AuthenticationException.class).when(authorization)
                 .checkUserPermissions(USER, TESTAPP2, Permission.READ);
 
@@ -216,7 +217,6 @@ public class ExperimentsResourceTest {
                 experimentList.getExperiments().containsAll(responseList));
         Assert.assertFalse("Response list contains experiment 2!", responseList.contains(experiment2));
     }
-
 
     @Test
     public void testGetExperiments_NullAuth() throws Exception {
@@ -769,7 +769,8 @@ public class ExperimentsResourceTest {
         } catch (AuthenticationException ignored) {
         }
 
-        // simply pass through the method when we get valid input and check if the response is correct
+        // simply pass through the method when we get valid input and check if the
+        // response is correct
         doReturn(USER).when(authorization).getUser(AUTHHEADER);
         doReturn(experiment).when(experiments).getExperiment(experiment.getID());
         doNothing().when(authorization).checkUserPermissions(USER, experiment.getApplicationName(), Permission.DELETE);
@@ -927,7 +928,8 @@ public class ExperimentsResourceTest {
         } catch (AuthenticationException ignored) {
         }
 
-        // simply pass through the method when we get valid input and check if the response is correct
+        // simply pass through the method when we get valid input and check if the
+        // response is correct
         doReturn(USER).when(authorization).getUser(AUTHHEADER);
         doReturn(experiment).when(experiments).getExperiment(experiment.getID());
         doNothing().when(authorization).checkUserPermissions(USER, experiment.getApplicationName(), Permission.CREATE);
@@ -1007,8 +1009,7 @@ public class ExperimentsResourceTest {
 
     @Test
     public void bucketReturnsLocationHeader() throws Exception {
-        Experiment experiment =
-                Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
+        Experiment experiment = Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
 
         Bucket.Label bucketLabel = Bucket.Label.valueOf("foo");
 
@@ -1046,8 +1047,7 @@ public class ExperimentsResourceTest {
 
     @Test
     public void postBucketExperimentNull() throws Exception {
-        Experiment experiment =
-                Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
+        Experiment experiment = Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
         UserInfo.Username subject = UserInfo.Username.valueOf("auser");
         Bucket newBucket = Mockito.mock(Bucket.class);
         when(authorization.getUser(USERPASS)).thenReturn(subject);
@@ -1059,8 +1059,7 @@ public class ExperimentsResourceTest {
 
     @Test
     public void putBucketListExperimentNull() throws Exception {
-        Experiment experiment =
-                Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
+        Experiment experiment = Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
         UserInfo.Username subject = UserInfo.Username.valueOf("auser");
         BucketList bucketList = Mockito.mock(BucketList.class);
         when(authorization.getUser(USERPASS)).thenReturn(subject);
@@ -1072,8 +1071,7 @@ public class ExperimentsResourceTest {
 
     @Test
     public void putBucketList() throws Exception {
-        Experiment experiment =
-                Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
+        Experiment experiment = Experiment.withID(Experiment.ID.valueOf(EXPERIMENT_ID)).build();
         UserInfo.Username subject = UserInfo.Username.valueOf("auser");
         BucketList bucketList = Mockito.mock(BucketList.class);
         when(authorization.getUser(USERPASS)).thenReturn(subject);
@@ -1086,7 +1084,6 @@ public class ExperimentsResourceTest {
     public void experimentReturnsLocationHeader() throws Exception {
 
         final Experiment.ID EXPERIMENT_ID = Experiment.ID.newInstance();
-
 
         Experiment experiment = Experiment.withID(EXPERIMENT_ID)
                 .withApplicationName(Application.Name.valueOf("foo"))
@@ -1134,7 +1131,8 @@ public class ExperimentsResourceTest {
         Assert.assertEquals("Wrong experiment returned.", experiment, actualExperiment);
 
         // no permission
-        doThrow(AuthenticationException.class).when(authorization).checkUserPermissions(USER, experiment.getApplicationName(), Permission.READ);
+        doThrow(AuthenticationException.class).when(authorization).checkUserPermissions(USER,
+                experiment.getApplicationName(), Permission.READ);
         try {
             experimentsResource.getAuthorizedExperimentOrThrow(experiment.getID(), USER);
             Assert.fail("Should throw AuthenticationException if user has no permission.");
@@ -1147,7 +1145,8 @@ public class ExperimentsResourceTest {
         // Default: parse uiDate
         OffsetDateTime offsetDateTime = experimentsResource.parseUIDate("08/07/1997", "-0700", "");
         OffsetDateTime expected = OffsetDateTime.of(1997, 8, 7, 0, 0, 0, 0, ZoneOffset.of("-0700"));
-        Assert.assertEquals("Should return an OffsetDateTime similar to August 7, 1997 with an offset of -0700.", expected, offsetDateTime);
+        Assert.assertEquals("Should return an OffsetDateTime similar to August 7, 1997 with an offset of -0700.",
+                expected, offsetDateTime);
 
         // Date is not parsable
         try {

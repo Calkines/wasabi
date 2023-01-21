@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.googlecode.catchexception.CatchException.verifyException;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -47,240 +47,251 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PrioritiesImplTest {
 
-    private final static Application.Name testApp = Application.Name.valueOf("testApp");
-    protected PrioritiesImpl prioritiesImpl;
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    @Mock
-    private PrioritiesRepository prioritiesRepository;
-    @Mock
-    private Experiments experiments;
-    @Mock
-    private ExperimentValidator validator;
+        private final static Application.Name testApp = Application.Name.valueOf("testApp");
+        protected PrioritiesImpl prioritiesImpl;
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+        @Mock
+        private PrioritiesRepository prioritiesRepository;
+        @Mock
+        private Experiments experiments;
+        @Mock
+        private ExperimentValidator validator;
 
-    @Before
-    public void setUp() {
-        prioritiesImpl = new PrioritiesImpl(prioritiesRepository, experiments);
-    }
+        @Before
+        public void setUp() {
+                prioritiesImpl = new PrioritiesImpl(prioritiesRepository, experiments);
+        }
 
-    @Test
-    public void getPriorities_test() throws Exception {
+        @Test
+        public void getPriorities_test() throws Exception {
 
-        Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp).build();
-        experiment.setState(Experiment.State.DRAFT);
-        when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
-        List<Experiment> experimentList = new ArrayList<>();
-        experimentList.add(experiment);
-        List<Experiment.ID> priorityList = new ArrayList<>();
-        priorityList.add(experiment.getID());
-        PrioritizedExperiment prioritizedExperiment = PrioritizedExperiment.from(experiment, 0).build();
-        PrioritizedExperimentList prioritizedExperimentList = new PrioritizedExperimentList();
-        prioritizedExperimentList.addPrioritizedExperiment(prioritizedExperiment);
+                Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
+                                .build();
+                experiment.setState(Experiment.State.DRAFT);
+                when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
+                List<Experiment> experimentList = new ArrayList<>();
+                experimentList.add(experiment);
+                List<Experiment.ID> priorityList = new ArrayList<>();
+                priorityList.add(experiment.getID());
+                PrioritizedExperiment prioritizedExperiment = PrioritizedExperiment.from(experiment, 0).build();
+                PrioritizedExperimentList prioritizedExperimentList = new PrioritizedExperimentList();
+                prioritizedExperimentList.addPrioritizedExperiment(prioritizedExperiment);
 
-        when(experiments.getExperiments(testApp)).thenReturn(experimentList);
-        when(prioritiesRepository.getPriorityList(testApp)).thenReturn(priorityList);
-        when(prioritiesRepository.getPriorities(testApp)).thenReturn(prioritizedExperimentList);
-        prioritiesImpl.getPriorities(testApp, true);
-        // verify that the control doesnt enter into the createPriorities part
-        verify(prioritiesRepository, never()).createPriorities(testApp, priorityList);
+                when(experiments.getExperiments(testApp)).thenReturn(experimentList);
+                when(prioritiesRepository.getPriorityList(testApp)).thenReturn(priorityList);
+                when(prioritiesRepository.getPriorities(testApp)).thenReturn(prioritizedExperimentList);
+                prioritiesImpl.getPriorities(testApp, true);
+                // verify that the control doesnt enter into the createPriorities part
+                verify(prioritiesRepository, never()).createPriorities(testApp, priorityList);
 
-        // Creating a badPriorityList
-        List<Experiment.ID> badPriorityList = new ArrayList<>();
-        badPriorityList.add(experiment.getID()); // This makes it equal to the current priorityList
+                // Creating a badPriorityList
+                List<Experiment.ID> badPriorityList = new ArrayList<>();
+                badPriorityList.add(experiment.getID()); // This makes it equal to the current priorityList
 
-        // Adding a DELETED experiment
-        Experiment deletedExperiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .build();
-        deletedExperiment.setState(Experiment.State.DELETED);
-        badPriorityList.add(deletedExperiment.getID());
-        when(experiments.getExperiment(deletedExperiment.getID())).thenReturn(null);
+                // Adding a DELETED experiment
+                Experiment deletedExperiment = Experiment.withID(Experiment.ID.newInstance())
+                                .withApplicationName(testApp)
+                                .build();
+                deletedExperiment.setState(Experiment.State.DELETED);
+                badPriorityList.add(deletedExperiment.getID());
+                when(experiments.getExperiment(deletedExperiment.getID())).thenReturn(null);
 
-        // Adding a TERMINATED experiment
-        Experiment terminatedExperiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .build();
-        terminatedExperiment.setState(Experiment.State.TERMINATED);
-        badPriorityList.add(terminatedExperiment.getID());
-        when(experiments.getExperiment(terminatedExperiment.getID())).thenReturn(terminatedExperiment);
+                // Adding a TERMINATED experiment
+                Experiment terminatedExperiment = Experiment.withID(Experiment.ID.newInstance())
+                                .withApplicationName(testApp)
+                                .build();
+                terminatedExperiment.setState(Experiment.State.TERMINATED);
+                badPriorityList.add(terminatedExperiment.getID());
+                when(experiments.getExperiment(terminatedExperiment.getID())).thenReturn(terminatedExperiment);
 
-        //Adding an experiment which belongs to a different application
-        Experiment differentApplicationExperiment = Experiment.withID(Experiment.ID.newInstance())
-                .withApplicationName(Application.Name
-                        .valueOf("differentApplication"))
-                .build();
-        differentApplicationExperiment.setState(Experiment.State.DRAFT);
-        badPriorityList.add(differentApplicationExperiment.getID());
-        when(experiments.getExperiment(differentApplicationExperiment.getID()))
-                .thenReturn(differentApplicationExperiment);
+                // Adding an experiment which belongs to a different application
+                Experiment differentApplicationExperiment = Experiment.withID(Experiment.ID.newInstance())
+                                .withApplicationName(Application.Name
+                                                .valueOf("differentApplication"))
+                                .build();
+                differentApplicationExperiment.setState(Experiment.State.DRAFT);
+                badPriorityList.add(differentApplicationExperiment.getID());
+                when(experiments.getExperiment(differentApplicationExperiment.getID()))
+                                .thenReturn(differentApplicationExperiment);
 
-        // Adding a duplicate valid experiment
-        badPriorityList.add(experiment.getID());
+                // Adding a duplicate valid experiment
+                badPriorityList.add(experiment.getID());
 
-        // Adding an experiment to the experiments list that should be in the priorityList
-        Experiment missingExperiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .build();
-        experiment.setState(Experiment.State.DRAFT);
-        experimentList.add(missingExperiment);
-        when(experiments.getExperiment(missingExperiment.getID())).thenReturn(missingExperiment);
+                // Adding an experiment to the experiments list that should be in the
+                // priorityList
+                Experiment missingExperiment = Experiment.withID(Experiment.ID.newInstance())
+                                .withApplicationName(testApp)
+                                .build();
+                experiment.setState(Experiment.State.DRAFT);
+                experimentList.add(missingExperiment);
+                when(experiments.getExperiment(missingExperiment.getID())).thenReturn(missingExperiment);
 
+                when(prioritiesRepository.getPriorityList(testApp)).thenReturn(badPriorityList);
+                prioritiesImpl.getPriorities(testApp, true);
+                priorityList.add(missingExperiment.getID()); // build the correct priorityList
+                // Verify that the control gets into the createPriorities part with the
+                // corrected priorityList
+                verify(prioritiesRepository, times(1)).createPriorities(testApp, priorityList);
+        }
 
-        when(prioritiesRepository.getPriorityList(testApp)).thenReturn(badPriorityList);
-        prioritiesImpl.getPriorities(testApp, true);
-        priorityList.add(missingExperiment.getID()); // build the correct priorityList
-        // Verify that the control gets into the createPriorities part with the corrected priorityList
-        verify(prioritiesRepository, times(1)).createPriorities(testApp, priorityList);
-    }
+        @Test
+        public void createPriorities_test() {
 
-    @Test
-    public void createPriorities_test() {
+                Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
+                                .build();
+                experiment.setState(Experiment.State.DRAFT);
+                when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
 
-        Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp).build();
-        experiment.setState(Experiment.State.DRAFT);
-        when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
+                Experiment deletedExperiment = Experiment.withID(Experiment.ID.newInstance())
+                                .withApplicationName(testApp)
+                                .build();
+                deletedExperiment.setState(Experiment.State.DELETED);
+                when(experiments.getExperiment(deletedExperiment.getID())).thenReturn(null);
 
-        Experiment deletedExperiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .build();
-        deletedExperiment.setState(Experiment.State.DELETED);
-        when(experiments.getExperiment(deletedExperiment.getID())).thenReturn(null);
+                List<Experiment> experimentsList = new ArrayList<>();
+                experimentsList.add(experiment);
+                when(experiments.getExperiments(testApp)).thenReturn(experimentsList);
 
-        List<Experiment> experimentsList = new ArrayList<>();
-        experimentsList.add(experiment);
-        when(experiments.getExperiments(testApp)).thenReturn(experimentsList);
+                List<Experiment.ID> experimentIDs = new ArrayList<>();
+                experimentIDs.add(experiment.getID());
+                experimentIDs.add(deletedExperiment.getID());
+                ExperimentIDList experimentIDList = ExperimentIDList.newInstance().withExperimentIDs(experimentIDs)
+                                .build();
 
+                List<Experiment.ID> priorityList = new ArrayList<>();
+                priorityList.add(experiment.getID());
 
-        List<Experiment.ID> experimentIDs = new ArrayList<>();
-        experimentIDs.add(experiment.getID());
-        experimentIDs.add(deletedExperiment.getID());
-        ExperimentIDList experimentIDList = ExperimentIDList.newInstance().withExperimentIDs(experimentIDs).build();
+                // Verify that null applicationName delivers an ApplicationNotFoundException
+                // exception
+                verifyException(prioritiesImpl, ApplicationNotFoundException.class)
+                                .createPriorities(null, experimentIDList, true);
 
-        List<Experiment.ID> priorityList = new ArrayList<>();
-        priorityList.add(experiment.getID());
+                prioritiesImpl.createPriorities(testApp, experimentIDList, false);
+                // Verify that the createPriorities method is invoked with the given
+                // experimentIDList
+                // when verifyPriorityList is false
+                verify(prioritiesRepository, times(1)).createPriorities(testApp, experimentIDList.getExperimentIDs());
 
-        // Verify that null applicationName delivers an ApplicationNotFoundException exception
-        verifyException(prioritiesImpl, ApplicationNotFoundException.class)
-                .createPriorities(null, experimentIDList, true);
+                prioritiesImpl.createPriorities(testApp, experimentIDList, true);
+                // Verify that the createPriorities method is invoked with the corrected
+                // priorityList
+                // when verifyPriorityList is true
+                verify(prioritiesRepository, times(1)).createPriorities(testApp, priorityList);
+        }
 
-        prioritiesImpl.createPriorities(testApp, experimentIDList, false);
-        // Verify that the createPriorities method is invoked with the given experimentIDList
-        // when verifyPriorityList is false
-        verify(prioritiesRepository, times(1)).createPriorities(testApp, experimentIDList.getExperimentIDs());
+        @Test
+        public void cleanPriorityList_test() {
+                Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
+                                .withState(Experiment.State.DRAFT).build();
+                Experiment experiment2 = Experiment.withID(Experiment.ID.newInstance())
+                                .withApplicationName(Application.Name.valueOf("newApp"))
+                                .withState(Experiment.State.DRAFT).build();
+                Experiment experiment3 = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
+                                .withState(Experiment.State.DRAFT).build();
 
-        prioritiesImpl.createPriorities(testApp, experimentIDList, true);
-        // Verify that the createPriorities method is invoked with the corrected priorityList
-        // when verifyPriorityList is true
-        verify(prioritiesRepository, times(1)).createPriorities(testApp, priorityList);
-    }
+                List<Experiment.ID> experimentIDs = new ArrayList<>();
+                experimentIDs.add(experiment.getID());
+                experimentIDs.add(experiment2.getID());
 
-    @Test
-    public void cleanPriorityList_test() {
-        Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .withState(Experiment.State.DRAFT).build();
-        Experiment experiment2 = Experiment.withID(Experiment.ID.newInstance())
-                .withApplicationName(Application.Name.valueOf("newApp"))
-                .withState(Experiment.State.DRAFT).build();
-        Experiment experiment3 = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .withState(Experiment.State.DRAFT).build();
+                List<Experiment> experimentList = new ArrayList<>();
+                experimentList.add(experiment3);
 
-        List<Experiment.ID> experimentIDs = new ArrayList<>();
-        experimentIDs.add(experiment.getID());
-        experimentIDs.add(experiment2.getID());
+                when(experiments.getExperiments(testApp)).thenReturn(experimentList);
+                List<Experiment.ID> cleanPriorityList = prioritiesImpl.cleanPriorityList(testApp, experimentIDs);
+                assert cleanPriorityList.size() == 1;
+                assert cleanPriorityList.get(0).getRawID() == experiment3.getID().getRawID();
 
-        List<Experiment> experimentList = new ArrayList<>();
-        experimentList.add(experiment3);
+                // Not adding ID of experiment3 to the priorityList
+                experimentList.add(experiment);
+                when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
+                when(experiments.getExperiment(experiment2.getID())).thenReturn(experiment2);
+                cleanPriorityList = prioritiesImpl.cleanPriorityList(testApp, experimentIDs);
+                assert cleanPriorityList.size() == 2;
+                assert cleanPriorityList.get(0) == experiment.getID();
+                assert cleanPriorityList.get(1) == experiment3.getID();
 
-        when(experiments.getExperiments(testApp)).thenReturn(experimentList);
-        List<Experiment.ID> cleanPriorityList = prioritiesImpl.cleanPriorityList(testApp, experimentIDs);
-        assert cleanPriorityList.size() == 1;
-        assert cleanPriorityList.get(0).getRawID() == experiment3.getID().getRawID();
+                // Adding a duplicate experiment ID to the priorityList
+                experimentIDs.add(experiment.getID());
+                cleanPriorityList = prioritiesImpl.cleanPriorityList(testApp, experimentIDs);
+                assert cleanPriorityList.size() == 2;
+                assert cleanPriorityList.get(0) == experiment.getID();
+                assert cleanPriorityList.get(1) == experiment3.getID();
 
-        // Not adding ID of experiment3 to the priorityList
-        experimentList.add(experiment);
-        when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
-        when(experiments.getExperiment(experiment2.getID())).thenReturn(experiment2);
-        cleanPriorityList = prioritiesImpl.cleanPriorityList(testApp, experimentIDs);
-        assert cleanPriorityList.size() == 2;
-        assert cleanPriorityList.get(0) == experiment.getID();
-        assert cleanPriorityList.get(1) == experiment3.getID();
+                // Adding an experiment with a Terminated state to the priorityList
+                Experiment terminatedExperiment = Experiment.withID(Experiment.ID.newInstance())
+                                .withApplicationName(testApp)
+                                .withState(Experiment.State.TERMINATED).build();
+                experimentIDs.add(terminatedExperiment.getID());
+                cleanPriorityList = prioritiesImpl.cleanPriorityList(testApp, experimentIDs);
+                assert cleanPriorityList.size() == 2;
+                assert cleanPriorityList.get(0) == experiment.getID();
+                assert cleanPriorityList.get(1) == experiment3.getID();
+        }
 
-        // Adding a duplicate experiment ID to the priorityList
-        experimentIDs.add(experiment.getID());
-        cleanPriorityList = prioritiesImpl.cleanPriorityList(testApp, experimentIDs);
-        assert cleanPriorityList.size() == 2;
-        assert cleanPriorityList.get(0) == experiment.getID();
-        assert cleanPriorityList.get(1) == experiment3.getID();
+        @Test
+        public void setPriority_for_Experiment() {
 
-        // Adding an experiment with a Terminated state to the priorityList
-        Experiment terminatedExperiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .withState(Experiment.State.TERMINATED).build();
-        experimentIDs.add(terminatedExperiment.getID());
-        cleanPriorityList = prioritiesImpl.cleanPriorityList(testApp, experimentIDs);
-        assert cleanPriorityList.size() == 2;
-        assert cleanPriorityList.get(0) == experiment.getID();
-        assert cleanPriorityList.get(1) == experiment3.getID();
-    }
+                Experiment experiment = mock(Experiment.class);
 
-    @Test
-    public void setPriority_for_Experiment() {
+                when(prioritiesRepository.getPriorityList(testApp)).thenReturn(null);
+                when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
+                when(experiment.getApplicationName()).thenReturn(testApp);
+                when(experiment.getState()).thenReturn(Experiment.State.TERMINATED);
+                when(experiment.getID()).thenReturn(Experiment.ID.newInstance());
 
-        Experiment experiment = mock(Experiment.class);
+                prioritiesImpl.setPriority(experiment.getID(), 42);
 
-        when(prioritiesRepository.getPriorityList(testApp)).thenReturn(null);
-        when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
-        when(experiment.getApplicationName()).thenReturn(testApp);
-        when(experiment.getState()).thenReturn(Experiment.State.TERMINATED);
-        when(experiment.getID()).thenReturn(Experiment.ID.newInstance());
+                // verify that he never got to the point where the priority is set
+                verify(prioritiesRepository, never()).createPriorities(any(Application.Name.class), anyList());
 
-        prioritiesImpl.setPriority(experiment.getID(), 42);
+                when(experiments.getExperiment(experiment.getID())).thenReturn(null);
+                // verify that he never got to the point where the priority is set
+                verify(prioritiesRepository, never()).createPriorities(any(Application.Name.class), anyList());
+        }
 
-        //verify that he never got to the point where the priority is set
-        verify(prioritiesRepository, never()).createPriorities(any(Application.Name.class), anyList());
+        @Test
+        public void setPriorityForExperimentWithPrioritySame() {
 
-        when(experiments.getExperiment(experiment.getID())).thenReturn(null);
-        //verify that he never got to the point where the priority is set
-        verify(prioritiesRepository, never()).createPriorities(any(Application.Name.class), anyList());
-    }
+                Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
+                                .withState(Experiment.State.RUNNING).build();
+                List<Experiment.ID> list = new ArrayList<>();
+                list.add(experiment.getID());
+                when(prioritiesRepository.getPriorityList(testApp)).thenReturn(list);
+                when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
 
-    @Test
-    public void setPriorityForExperimentWithPrioritySame() {
+                prioritiesImpl.setPriority(experiment.getID(), 1);
 
-        Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .withState(Experiment.State.RUNNING).build();
-        List<Experiment.ID> list = new ArrayList<>();
-        list.add(experiment.getID());
-        when(prioritiesRepository.getPriorityList(testApp)).thenReturn(list);
-        when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
+                verify(prioritiesRepository, never()).createPriorities(any(Application.Name.class), anyList());
+        }
 
-        prioritiesImpl.setPriority(experiment.getID(), 1);
+        @Test
+        public void setPriorityForExperimentWithPriorityNotSame() {
 
-        verify(prioritiesRepository, never()).createPriorities(any(Application.Name.class), anyList());
-    }
+                Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
+                                .withState(Experiment.State.RUNNING).build();
+                List<Experiment.ID> list = new ArrayList<>();
+                list.add(experiment.getID());
+                when(prioritiesRepository.getPriorityList(testApp)).thenReturn(list);
+                when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
 
-    @Test
-    public void setPriorityForExperimentWithPriorityNotSame() {
+                prioritiesImpl.setPriority(experiment.getID(), 2);
 
-        Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .withState(Experiment.State.RUNNING).build();
-        List<Experiment.ID> list = new ArrayList<>();
-        list.add(experiment.getID());
-        when(prioritiesRepository.getPriorityList(testApp)).thenReturn(list);
-        when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
+                verify(prioritiesRepository, times(1)).createPriorities(any(Application.Name.class), anyList());
+        }
 
-        prioritiesImpl.setPriority(experiment.getID(), 2);
+        @Test
+        public void setPriorityForExperimentWithPriorityZero() {
 
-        verify(prioritiesRepository, times(1)).createPriorities(any(Application.Name.class), anyList());
-    }
+                Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
+                                .withState(Experiment.State.RUNNING).build();
+                List<Experiment.ID> list = new ArrayList<>();
+                list.add(experiment.getID());
+                when(prioritiesRepository.getPriorityList(testApp)).thenReturn(list);
+                when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
 
-    @Test
-    public void setPriorityForExperimentWithPriorityZero() {
+                prioritiesImpl.setPriority(experiment.getID(), 0);
 
-        Experiment experiment = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp)
-                .withState(Experiment.State.RUNNING).build();
-        List<Experiment.ID> list = new ArrayList<>();
-        list.add(experiment.getID());
-        when(prioritiesRepository.getPriorityList(testApp)).thenReturn(list);
-        when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
-
-        prioritiesImpl.setPriority(experiment.getID(), 0);
-
-        verify(prioritiesRepository, times(1)).createPriorities(any(Application.Name.class), anyList());
-    }
+                verify(prioritiesRepository, times(1)).createPriorities(any(Application.Name.class), anyList());
+        }
 }

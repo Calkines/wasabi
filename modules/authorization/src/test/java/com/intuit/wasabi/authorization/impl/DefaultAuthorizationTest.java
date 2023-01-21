@@ -55,12 +55,11 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAuthorizationTest {
@@ -366,6 +365,5 @@ public class DefaultAuthorizationTest {
         thrown.expect(AuthenticationException.class);
         defaultAuthorization.getUserInfo(null);
     }
-
 
 }

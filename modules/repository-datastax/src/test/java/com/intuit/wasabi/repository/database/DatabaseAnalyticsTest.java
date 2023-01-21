@@ -25,7 +25,7 @@ import com.intuit.wasabi.experimentobjects.Experiment;
 import com.intuit.wasabi.repository.RepositoryException;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.mockito.Mockito;
 
 import javax.sql.DataSource;
@@ -84,7 +84,7 @@ public class DatabaseAnalyticsTest {
                 .thenReturn(expected);
         List<Map> result = databaseAnalytics.getRollupRows(experimentId, rollupDate, parameters);
         assertThat(result, is(expected));
-        //Exception is thrown in this case
+        // Exception is thrown in this case
         doThrow(new RuntimeException())
                 .when(transaction)
                 .select(anyString(), eq(experimentId), eq(true), eq(rollupDate), anyString());
@@ -107,7 +107,7 @@ public class DatabaseAnalyticsTest {
         when(transaction.select(anyString(), Matchers.anyVararg())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getActionsRows(experimentId, parameters);
         assertThat(result, is(expected));
-        //exception while select
+        // exception while select
         doThrow(new RuntimeException()).when(transaction)
                 .select(anyString(), Matchers.anyVararg());
         databaseAnalytics.getActionsRows(experimentId, parameters);
@@ -129,13 +129,12 @@ public class DatabaseAnalyticsTest {
         when(transaction.select(anyString(), Matchers.anyVararg())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getJointActions(experimentId, parameters);
         assertThat(result, is(expected));
-        //exception while select
+        // exception while select
         doThrow(new RuntimeException()).when(transaction)
                 .select(anyString(), Matchers.anyVararg());
         databaseAnalytics.getJointActions(experimentId, parameters);
         fail();
     }
-
 
     @Test(expected = RepositoryException.class)
     public void getImpressionRowsTest() {
@@ -149,7 +148,7 @@ public class DatabaseAnalyticsTest {
         when(transaction.select(anyString(), Matchers.anyVararg())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getImpressionRows(experimentId, parameters);
         assertThat(result, is(expected));
-        //exception while select
+        // exception while select
         doThrow(new RuntimeException()).when(transaction)
                 .select(anyString(), Matchers.anyVararg());
         databaseAnalytics.getImpressionRows(experimentId, parameters);
@@ -168,7 +167,7 @@ public class DatabaseAnalyticsTest {
         assertThat(result.size(), is(1));
         assertThat(result.get(Bucket.Label.valueOf("TEST_LABEL")).getLabel().toString(), is("TEST_LABEL"));
         assertThat(result.get(Bucket.Label.valueOf("TEST_LABEL")).getActionCounts().size(), is(0));
-        //exception while select
+        // exception while select
         doThrow(new RuntimeException()).when(transaction)
                 .select(anyString(), Matchers.anyVararg());
         databaseAnalytics.getEmptyBuckets(experimentId);
@@ -184,7 +183,7 @@ public class DatabaseAnalyticsTest {
         when(transaction.select(anyString(), Matchers.anyVararg())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getCountsFromRollups(experimentId, parameters);
         assertThat(result, is(expected));
-        //exception while select
+        // exception while select
         doThrow(new RuntimeException()).when(transaction)
                 .select(anyString(), Matchers.anyVararg());
         databaseAnalytics.getCountsFromRollups(experimentId, parameters);
@@ -242,7 +241,7 @@ public class DatabaseAnalyticsTest {
         assertThat(actions.size(), is(1));
         assertThat(param.size(), is(1));
         assertThat(stringBuilder.toString(), is(" and action in (?) "));
-        stringBuilder.setLength(0); //reset the builder
+        stringBuilder.setLength(0); // reset the builder
         param.clear();
         actions.add("a2");
         databaseAnalytics.addActionsToSql(parameters, stringBuilder, param);
@@ -250,6 +249,5 @@ public class DatabaseAnalyticsTest {
         assertThat(param.size(), is(2));
         assertThat(stringBuilder.toString(), is(" and action in (?,?) "));
     }
-
 
 }

@@ -48,7 +48,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -101,11 +101,11 @@ public class AnalyticsImplTest {
         Experiment.ID id = Experiment.ID.newInstance();
         when(experiments.getExperiment(eq(id))).thenReturn(experiment);
         when(parameters.getToTime()).thenReturn(date);
-        //the if condition
+        // the if condition
         when(parameters.getFromTime()).thenReturn(null);
         boolean result = this.analyticsImpl.circumventRollup(id, parameters);
         assertThat(result, is(true));
-        //else if (to != null) condition
+        // else if (to != null) condition
         List<String> list = mock(List.class);
         when(parameters.getFromTime()).thenReturn(null);
         when(parameters.getActions()).thenReturn(null);
@@ -113,7 +113,7 @@ public class AnalyticsImplTest {
                 .thenReturn(false);
         result = this.analyticsImpl.circumventRollup(id, parameters);
         assertThat(result, is(false));
-        //else condition
+        // else condition
         when(parameters.getToTime()).thenReturn(null);
         result = this.analyticsImpl.circumventRollup(id, parameters);
         assertThat(result, is(false));
@@ -137,13 +137,13 @@ public class AnalyticsImplTest {
         Experiment.ID id = Experiment.ID.newInstance();
         when(experimentRepository.getExperiment(eq(id))).thenReturn(experiment);
         when(assignmentsRepository.getBucketAssignmentCount(eq(experiment))).thenReturn(assignmentCounts);
-        //test the else part
-        Date date = new Date(1000); //some time in 1970
+        // test the else part
+        Date date = new Date(1000); // some time in 1970
         when(experiment.getCreationTime()).thenReturn(date);
         AssignmentCounts result = this.analyticsImpl.getAssignmentCounts(id, null);
         assertThat(result, is(assignmentCounts));
-        //test the if part
-        date = new Date(); //always now
+        // test the if part
+        date = new Date(); // always now
         when(experiment.getCreationTime()).thenReturn(date);
         result = this.analyticsImpl.getAssignmentCounts(id, null);
         assertThat(result, is(assignmentCounts));
@@ -160,8 +160,8 @@ public class AnalyticsImplTest {
         Map buckets = mock(Map.class);
         BinomialMetrics.BinomialMetric binomialMetric = mock(BinomialMetrics.BinomialMetric.class);
         when(experimentCounts.getBuckets()).thenReturn(buckets);
-        ExperimentStatistics result = this.analyticsImpl.calculateExperimentStatistics(experimentCounts, binomialMetric, 1.0
-                , Parameters.Mode.TEST);
+        ExperimentStatistics result = this.analyticsImpl.calculateExperimentStatistics(experimentCounts, binomialMetric,
+                1.0, Parameters.Mode.TEST);
         assertNotNull(result);
     }
 
@@ -172,7 +172,7 @@ public class AnalyticsImplTest {
         Assert.fail();
     }
 
-    @Ignore  /* TO BE IMPLEMENTED */
+    @Ignore /* TO BE IMPLEMENTED */
     public void getExperimentCountsDailiesTest() {
         Experiment experiment = mock(Experiment.class);
         Experiment.ID id = Experiment.ID.newInstance();
