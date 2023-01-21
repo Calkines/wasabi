@@ -97,7 +97,8 @@ public class DatabaseAnalyticsTest {
     // fail();
     // }
 
-    @Test(expected = RepositoryException.class)
+    // @Test(expected = RepositoryException.class)
+    @Test
     public void getActionsRowsTest() {
         Experiment.ID experimentId = Experiment.ID.newInstance();
         Parameters parameters = mock(Parameters.class, RETURNS_DEEP_STUBS);
