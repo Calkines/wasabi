@@ -17,41 +17,21 @@ package com.intuit.wasabi.events.impl;
 
 import com.intuit.wasabi.analyticsobjects.Event;
 import com.intuit.wasabi.assignmentobjects.Assignment;
-import com.intuit.wasabi.assignmentobjects.User;
 import com.intuit.wasabi.database.Transaction;
-import com.intuit.wasabi.exceptions.ApplicationNotFoundException;
-import com.intuit.wasabi.experimentobjects.Bucket;
 import com.intuit.wasabi.experimentobjects.Context;
-import com.intuit.wasabi.experimentobjects.Experiment;
-import com.intuit.wasabi.experimentobjects.exceptions.WasabiClientException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.slf4j.LoggerFactory.getLogger;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(LoggerFactory.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class EventsEnvelopeTest {
 
-    private EventsEnvelope eventsEnvelope;
     @Mock
     private Transaction transaction;
     @Mock
@@ -71,7 +51,7 @@ public class EventsEnvelopeTest {
         event.setValue("someEventValue");
         event.setPayload(Event.Payload.valueOf("someEventPayload"));
 
-        eventsEnvelope = new EventsEnvelope(assignment, event, transaction);
+        // eventsEnvelope = new EventsEnvelope(assignment, event, transaction);
     }
 
     @Test
