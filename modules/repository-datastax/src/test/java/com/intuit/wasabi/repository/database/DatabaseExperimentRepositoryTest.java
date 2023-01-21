@@ -35,6 +35,7 @@ import com.intuit.wasabi.repository.RepositoryException;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.Mockito;
 
@@ -385,14 +386,15 @@ public class DatabaseExperimentRepositoryTest {
                 repository.createBucket(bucket);
                 verify(transaction, atLeastOnce()).insert(anyString(), any());
 
-                doThrow(new DatabaseException("db error")).when(transaction).insert(anyString(), any());
+                doThrow(new DatabaseException("db error")).when(transaction).insert(anyString(),
+                                ArgumentMatchers.any());
                 BDDCatchException.when(repository).createBucket(bucket);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(WasabiException.class)
                                 .hasMessage("db error")
                                 .hasNoCause();
 
-                doThrow(new RuntimeException("RTE")).when(transaction).insert(anyString(), any());
+                doThrow(new RuntimeException("RTE")).when(transaction).insert(anyString(), ArgumentMatchers.any());
                 BDDCatchException.when(repository).createBucket(bucket);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(WasabiException.class)
