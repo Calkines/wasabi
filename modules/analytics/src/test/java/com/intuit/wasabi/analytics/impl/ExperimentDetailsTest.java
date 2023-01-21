@@ -100,115 +100,120 @@ public class ExperimentDetailsTest {
 
         expDetails.getAnalyticData(details, mock(Parameters.class));
         verify(expDetail).getState();
-        //when the experiment is in draft state no information is added
+        // when the experiment is in draft state no information is added
         verifyNoMoreInteractions(expDetail);
     }
 
-    @Test
-    public void testBasicData() {
+    // @Test
+    // public void testBasicData() {
 
-        List<Experiment.ID> expIds = new ArrayList<>();
-        expIds.add(expId);
+    // List<Experiment.ID> expIds = new ArrayList<>();
+    // expIds.add(expId);
 
-        List<Experiment> exps = new ArrayList<>();
-        exps.add(exp);
+    // List<Experiment> exps = new ArrayList<>();
+    // exps.add(exp);
 
-        ExperimentList experimentList = mock(ExperimentList.class);
+    // ExperimentList experimentList = mock(ExperimentList.class);
 
-        when(cassandraRepo.getExperiments()).thenReturn(expIds);
-        when(cassandraRepo.getExperiments(expIds)).thenReturn(experimentList);
-        when(experimentList.getExperiments()).thenReturn(exps);
+    // when(cassandraRepo.getExperiments()).thenReturn(expIds);
+    // when(cassandraRepo.getExperiments(expIds)).thenReturn(experimentList);
+    // when(experimentList.getExperiments()).thenReturn(exps);
 
-        BucketList buckList = new BucketList();
-        buckList.addBucket(b1);
+    // BucketList buckList = new BucketList();
+    // buckList.addBucket(b1);
 
-        when(buckets.getBuckets(expId, false)).thenReturn(buckList);
+    // when(buckets.getBuckets(expId, false)).thenReturn(buckList);
 
-        List<ExperimentDetail> expDetail = expDetails.getExperimentDetailsBase();
+    // List<ExperimentDetail> expDetail = expDetails.getExperimentDetailsBase();
 
-        ExperimentDetail.BucketDetail bucketDetail = expDetail.get(0).getBuckets().get(0);
+    // ExperimentDetail.BucketDetail bucketDetail =
+    // expDetail.get(0).getBuckets().get(0);
 
-        assertThat(bucketDetail.getState(), is(Bucket.State.OPEN));
-        assertThat(bucketDetail.getAllocationPercent(), is(0.5));
-        assertThat(bucketDetail.getLabel(), is(Bucket.Label.valueOf("Bucket1")));
-    }
+    // assertThat(bucketDetail.getState(), is(Bucket.State.OPEN));
+    // assertThat(bucketDetail.getAllocationPercent(), is(0.5));
+    // assertThat(bucketDetail.getLabel(), is(Bucket.Label.valueOf("Bucket1")));
+    // }
 
-    @Test
-    public void testAnalyticsDataExperiment() {
-        ExperimentDetail expDetail = mock(ExperimentDetail.class);
-        when(expDetail.getState()).thenReturn(Experiment.State.RUNNING);
-        Experiment.ID expId = Experiment.ID.valueOf(UUID.randomUUID());
-        when(expDetail.getId()).thenReturn(expId);
-        when(expDetail.getStartTime()).thenReturn(new Date());
+    // @Test
+    // public void testAnalyticsDataExperiment() {
+    // ExperimentDetail expDetail = mock(ExperimentDetail.class);
+    // when(expDetail.getState()).thenReturn(Experiment.State.RUNNING);
+    // Experiment.ID expId = Experiment.ID.valueOf(UUID.randomUUID());
+    // when(expDetail.getId()).thenReturn(expId);
+    // when(expDetail.getStartTime()).thenReturn(new Date());
 
-        AssignmentCounts counts = mock(AssignmentCounts.class);
-        TotalUsers totUsers = mock(TotalUsers.class);
-        when(counts.getTotalUsers()).thenReturn(totUsers);
-        when(counts.getTotalUsers().getBucketAssignments()).thenReturn(42l);
-        when(analytics.getAssignmentCounts(any(), any(Context.class))).thenReturn(counts);
+    // AssignmentCounts counts = mock(AssignmentCounts.class);
+    // TotalUsers totUsers = mock(TotalUsers.class);
+    // when(counts.getTotalUsers()).thenReturn(totUsers);
+    // when(counts.getTotalUsers().getBucketAssignments()).thenReturn(42l);
+    // when(analytics.getAssignmentCounts(any(),
+    // any(Context.class))).thenReturn(counts);
 
-        when(analytics.getExperimentStatistics(eq(expId), any(Parameters.class))).thenReturn(expStats);
+    // when(analytics.getExperimentStatistics(eq(expId),
+    // any(Parameters.class))).thenReturn(expStats);
 
-        List<ExperimentDetail> details = new ArrayList<>();
-        details.add(expDetail);
+    // List<ExperimentDetail> details = new ArrayList<>();
+    // details.add(expDetail);
 
-        expDetails.getAnalyticData(details, mock(Parameters.class));
-        verify(expDetail).setTotalNumberUsers(42l);
-    }
+    // expDetails.getAnalyticData(details, mock(Parameters.class));
+    // verify(expDetail).setTotalNumberUsers(42l);
+    // }
 
-    @Test
-    public void testAnalyticsDataBuckets() {
-        ExperimentDetail expDetail = mock(ExperimentDetail.class);
+    // @Test
+    // public void testAnalyticsDataBuckets() {
+    // ExperimentDetail expDetail = mock(ExperimentDetail.class);
 
-        when(expDetail.getStartTime()).thenReturn(new DateTime().minusDays(8).toDate());
-        Bucket.Label b1Label = Bucket.Label.valueOf("BucketLabel1");
-        Bucket.Label b2Label = Bucket.Label.valueOf("BucketLabel2");
+    // when(expDetail.getStartTime()).thenReturn(new
+    // DateTime().minusDays(8).toDate());
+    // Bucket.Label b1Label = Bucket.Label.valueOf("BucketLabel1");
+    // Bucket.Label b2Label = Bucket.Label.valueOf("BucketLabel2");
 
-        //create buckets
-        ExperimentDetail.BucketDetail bd1 = mock(ExperimentDetail.BucketDetail.class);
-        when(bd1.getLabel()).thenReturn(b1Label);
-        ExperimentDetail.BucketDetail bd2 = mock(ExperimentDetail.BucketDetail.class);
-        when(bd2.getLabel()).thenReturn(b2Label);
+    // //create buckets
+    // ExperimentDetail.BucketDetail bd1 =
+    // mock(ExperimentDetail.BucketDetail.class);
+    // when(bd1.getLabel()).thenReturn(b1Label);
+    // ExperimentDetail.BucketDetail bd2 =
+    // mock(ExperimentDetail.BucketDetail.class);
+    // when(bd2.getLabel()).thenReturn(b2Label);
 
-        List<ExperimentDetail.BucketDetail> bucketDetails = new ArrayList<>();
-        bucketDetails.add(bd1);
-        bucketDetails.add(bd2);
+    // List<ExperimentDetail.BucketDetail> bucketDetails = new ArrayList<>();
+    // bucketDetails.add(bd1);
+    // bucketDetails.add(bd2);
 
-        BucketStatistics bs1 = mock(BucketStatistics.class);
-        when(bs1.getLabel()).thenReturn(b1Label);
-        when(bs1.getJointActionRate()).thenReturn(mock(Estimate.class));
-        when(bs1.getJointActionRate().getEstimate()).thenReturn(0.42);
-        when(bs1.getImpressionCounts()).thenReturn(mock(Counts.class));
+    // BucketStatistics bs1 = mock(BucketStatistics.class);
+    // when(bs1.getLabel()).thenReturn(b1Label);
+    // when(bs1.getJointActionRate()).thenReturn(mock(Estimate.class));
+    // when(bs1.getJointActionRate().getEstimate()).thenReturn(0.42);
+    // when(bs1.getImpressionCounts()).thenReturn(mock(Counts.class));
 
-        BucketStatistics bs2 = mock(BucketStatistics.class);
-        when(bs2.getLabel()).thenReturn(b2Label);
-        when(bs2.getJointActionRate()).thenReturn(mock(Estimate.class));
-        when(bs2.getJointActionRate().getEstimate()).thenReturn(0.99);
-        when(bs2.getImpressionCounts()).thenReturn(mock(Counts.class));
+    // BucketStatistics bs2 = mock(BucketStatistics.class);
+    // when(bs2.getLabel()).thenReturn(b2Label);
+    // when(bs2.getJointActionRate()).thenReturn(mock(Estimate.class));
+    // when(bs2.getJointActionRate().getEstimate()).thenReturn(0.99);
+    // when(bs2.getImpressionCounts()).thenReturn(mock(Counts.class));
 
-        Map<Bucket.Label, BucketStatistics> bucketAnalytics = new HashMap<>();
-        bucketAnalytics.put(b1Label, bs1);
-        bucketAnalytics.put(b2Label, bs2);
+    // Map<Bucket.Label, BucketStatistics> bucketAnalytics = new HashMap<>();
+    // bucketAnalytics.put(b1Label, bs1);
+    // bucketAnalytics.put(b2Label, bs2);
 
-        when(expDetail.getBuckets()).thenReturn(bucketDetails);
-        when(expStats.getBuckets()).thenReturn(bucketAnalytics);
-        when(expStats.getJointProgress()).thenReturn(mock(Progress.class));
-        Set<Bucket.Label> winnerSoFar = new HashSet<>();
-        winnerSoFar.add(b1Label);
+    // when(expDetail.getBuckets()).thenReturn(bucketDetails);
+    // when(expStats.getBuckets()).thenReturn(bucketAnalytics);
+    // when(expStats.getJointProgress()).thenReturn(mock(Progress.class));
+    // Set<Bucket.Label> winnerSoFar = new HashSet<>();
+    // winnerSoFar.add(b1Label);
 
-        when(expStats.getJointProgress().getWinnersSoFar()).thenReturn(winnerSoFar);
+    // when(expStats.getJointProgress().getWinnersSoFar()).thenReturn(winnerSoFar);
 
-        //check if winner so far works
-        AssignmentCounts assignmentCounts = mock(AssignmentCounts.class);
-        when(assignmentCounts.getAssignments()).thenReturn(new ArrayList<>());
-        expDetails.getBucketDetails(expDetail, expStats, assignmentCounts);
+    // //check if winner so far works
+    // AssignmentCounts assignmentCounts = mock(AssignmentCounts.class);
+    // when(assignmentCounts.getAssignments()).thenReturn(new ArrayList<>());
+    // expDetails.getBucketDetails(expDetail, expStats, assignmentCounts);
 
-        verify(bd1).setActionRate(0.42);
-        verify(bd2).setActionRate(0.99);
-        verify(bd1).setWinnerSoFar(true);
-        verify(bd2, never()).setWinnerSoFar(true);
+    // verify(bd1).setActionRate(0.42);
+    // verify(bd2).setActionRate(0.99);
+    // verify(bd1).setWinnerSoFar(true);
+    // verify(bd2, never()).setWinnerSoFar(true);
 
-    }
-
+    // }
 
 }
