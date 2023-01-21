@@ -119,7 +119,7 @@ public class DatabaseAnalyticsTest {
         when(transaction.select(anyString(), any())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getActionsRows(experimentId,
                 parameters);
-        assertEquals(result, any(List.class));
+        assertEquals(result, mock(List.class));
         // assertThat(result, is(expected));
         // // exception while select
         // doThrow(new RuntimeException()).when(transaction)
