@@ -62,7 +62,7 @@ http://www.w3.org/2001/XMLSchema-instance">
         <application.heapsize>256m</application.heapsize>
         <assignment.metadata.cache.maxBytesLocalHeap>128M</assignment.metadata.cache.maxBytesLocalHeap>
 
-        <jacoco.version>0.7.9</jacoco.version>
+        <jacoco.version>0.8.6</jacoco.version>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
 
         <http.proxy.host>http://insert.your.proxy.host.here</http.proxy.host>
@@ -138,18 +138,18 @@ http://www.w3.org/2001/XMLSchema-instance">
                 <application.home>./${application.name}</application.home>
                 <application.http.host>localhost</application.http.host>
                 <application.http.port>8080</application.http.port>
-            </properties>
-            <build>
+		</properties>
+			<build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.11</version>
+                        <version>3.0.0-M8</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-junit47</artifactId>
-                                <version>2.12</version>
+                                <version>3.0.0-M8</version>
                             </dependency>
                         </dependencies>
                         <configuration>
@@ -172,27 +172,22 @@ http://www.w3.org/2001/XMLSchema-instance">
                 <application.http.host>${cassandra.experiments.nodeHosts}</application.http.host>
                 <application.http.port>8080</application.http.port>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.11</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.maven.surefire</groupId>
-                                <artifactId>surefire-junit47</artifactId>
-                                <version>2.12</version>
-                            </dependency>
-                        </dependencies>
-                        <configuration>
-                            <includes>
-                                <include>**/*.class</include>
-                            </includes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+		    <build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>3.0.0-M8</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.surefire</groupId>
+								<artifactId>surefire-junit47</artifactId>
+								<version>3.0.0-M8</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
         </profile>
         <profile>
             <id>build</id>
@@ -354,19 +349,19 @@ http://www.w3.org/2001/XMLSchema-instance">
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.10.19</version>
+            <version>5.0.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
-            <version>1.6.4</version>
+            <version>2.0.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.6.4</version>
+            <artifactId>powermock-api-mockito2</artifactId>
+	    <version>2.0.9</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -375,7 +370,12 @@ http://www.w3.org/2001/XMLSchema-instance">
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+	<dependency>
+	    <groupId>org.javassist</groupId>
+	    <artifactId>javassist</artifactId>
+	    <version>3.24.1-GA</version>
+	</dependency>
+	<dependency>
             <groupId>eu.codearte.catch-exception</groupId>
             <artifactId>catch-exception</artifactId>
             <version>1.4.4</version>
