@@ -416,7 +416,7 @@ public class DatabaseExperimentRepositoryTest {
 
                 assertThat(result, is(bucket));
 
-                verify(transaction, times(1)).update(anyString(), any());
+                verify(transaction, times(1)).update(anyString(), anyString());
                 when(bucket.isControl()).thenReturn(true);
                 result = repository.updateBucket(bucket);
                 assertThat(result, is(bucket));
