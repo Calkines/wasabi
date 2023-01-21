@@ -602,18 +602,19 @@ public class ExperimentsImplTest {
         Experiment current = mock(Experiment.class);
         UserInfo user = mock(UserInfo.class);
 
-        ExperimentsImpl expImpl = spy(new ExperimentsImpl(databaseRepository,
+        ExperimentsImpl _expImpl = spy(new ExperimentsImpl(databaseRepository,
                 cassandraRepository, experiments,
                 buckets, pages, priorities, validator, ruleCache, eventLog));
 
         when(current.getID()).thenReturn(experimentID);
-        doReturn(current).when(expImpl).getExperiment(experimentID);
+        when(update.getID()).thenReturn(experimentID);
+        when(update.getDescription()).thenReturn("This experiment was updated");
+        doReturn(current).when(_expImpl).getExperiment(experimentID);
+        doReturn(false).when(_expImpl).buildUpdatedExperiment(eq(current), eq(update),
+                any(Experiment.Builder.class), any(List.class));
 
-        assertEquals(experimentID, "idexperimento");
-
-        // doReturn(false).when(expImpl).buildUpdatedExperiment(eq(current), eq(update),
-        // any(Experiment.Builder.class), any(List.class));
-        // Experiment result = expImpl.updateExperiment(experimentID, update, user);
+        Experiment result = _expImpl.updateExperiment(experimentID, update, user);
+        assertEquals(result, "worked");
         // verify(experiments, times(1)).checkStateTransition(any(Experiment.ID.class),
         // any(Experiment.State.class),
         // any(Experiment.State.class));
