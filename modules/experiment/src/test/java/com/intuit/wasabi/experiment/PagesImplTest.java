@@ -54,7 +54,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PagesImplTest {
 
     private final static Application.Name testApp = Application.Name.valueOf("testApp");
@@ -78,8 +78,9 @@ public class PagesImplTest {
     public void testPostPages() {
         PagesImpl pagesImpl = new PagesImpl(cassandraRepository, pagesRepository, experiments, eventLog);
 
-        //Create Experiment and PageList for App
-        Experiment experiment = Experiment.withID(experimentID).withApplicationName(testApp).withLabel(Experiment.Label.valueOf("ExperimentLabel")).build();
+        // Create Experiment and PageList for App
+        Experiment experiment = Experiment.withID(experimentID).withApplicationName(testApp)
+                .withLabel(Experiment.Label.valueOf("ExperimentLabel")).build();
         ExperimentPageList pageList = new ExperimentPageList();
         ExperimentPage expPage = ExperimentPage.withAttributes(Page.Name.valueOf("PageName"), true).build();
         pageList.addPage(expPage);
@@ -116,7 +117,7 @@ public class PagesImplTest {
     public void testDeletePage() {
         PagesImpl pagesImpl = new PagesImpl(cassandraRepository, pagesRepository, experiments, eventLog);
 
-        //Create Experiment and PageList for App
+        // Create Experiment and PageList for App
         Experiment experiment = Experiment.withID(experimentID).withApplicationName(testApp).build();
         Page page = new Page.Builder().withName(Page.Name.valueOf("somePage")).build();
         when(experiments.getExperiment(experimentID)).thenReturn(null);
@@ -154,7 +155,7 @@ public class PagesImplTest {
     public void testGetExperimentPages() {
         PagesImpl pagesImpl = new PagesImpl(cassandraRepository, pagesRepository, experiments, eventLog);
 
-        //Create Experiment and PageList for App
+        // Create Experiment and PageList for App
         Experiment experiment = Experiment.withID(experimentID).withApplicationName(testApp).build();
         ExperimentPageList pageList = new ExperimentPageList();
         pageList.addPage(new ExperimentPage());
@@ -177,14 +178,14 @@ public class PagesImplTest {
 
         PagesImpl pagesImpl = new PagesImpl(cassandraRepository, pagesRepository, experiments, eventLog);
 
-        //Create Experiments for App
+        // Create Experiments for App
         Experiment experiment = Experiment.withID(experimentID).withApplicationName(testApp).build();
         Experiment experiment1 = Experiment.withID(Experiment.ID.newInstance()).withApplicationName(testApp).build();
 
         when(cassandraRepository.getExperiment(experiment.getID())).thenReturn(experiment);
         when(cassandraRepository.getExperiment(experiment1.getID())).thenReturn(experiment1);
 
-        //Put Pages for first experiment, app
+        // Put Pages for first experiment, app
         ExperimentList experimentList = new ExperimentList();
         experimentList.addExperiment(experiment);
         String pageName1 = "testPage";
@@ -193,11 +194,11 @@ public class PagesImplTest {
         when(pagesImpl.getPageExperiments(testApp, page1)).thenReturn(experimentList);
         assertTrue(experimentList.getExperiments().size() == 1);
 
-        //Confirm null pageName and null app, will return no experiments.
+        // Confirm null pageName and null app, will return no experiments.
         experimentList = pagesImpl.getPageExperiments(null, null);
         assertTrue(experimentList.getExperiments().size() == 0);
 
-        //Confirm null pageName for proper app, will return no experiments.
+        // Confirm null pageName for proper app, will return no experiments.
         experimentList = pagesImpl.getPageExperiments(testApp, null);
         assertTrue(experimentList.getExperiments().size() == 0);
     }
@@ -207,10 +208,10 @@ public class PagesImplTest {
 
         PagesImpl pagesImpl = new PagesImpl(cassandraRepository, pagesRepository, experiments, eventLog);
 
-        //Create Experiments for App
+        // Create Experiments for App
         Experiment experiment = Experiment.withID(experimentID).withApplicationName(testApp).build();
 
-        //Put Pages for first experiment, app
+        // Put Pages for first experiment, app
         ExperimentList experimentList = new ExperimentList();
         experimentList.addExperiment(experiment);
 
@@ -222,7 +223,8 @@ public class PagesImplTest {
         Collection<Experiment.ID> ids = new ArrayList<>();
         ids.add(experiment.getID());
 
-        when(pagesRepository.getExperiments(any(Application.Name.class), any(Page.Name.class))).thenReturn(pageExperiments);
+        when(pagesRepository.getExperiments(any(Application.Name.class), any(Page.Name.class)))
+                .thenReturn(pageExperiments);
         when(cassandraRepository.getExperiments(anyCollection())).thenReturn(experimentList);
 
         ExperimentList experimentListResult = pagesImpl.getPageExperiments(testApp, page.getName());
