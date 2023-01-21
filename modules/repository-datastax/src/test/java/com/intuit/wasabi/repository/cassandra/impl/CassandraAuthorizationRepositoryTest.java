@@ -53,6 +53,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -452,10 +453,10 @@ public class CassandraAuthorizationRepositoryTest {
                 com.intuit.wasabi.authenticationobjects.UserInfo.Username username = com.intuit.wasabi.authenticationobjects.UserInfo.Username
                                 .valueOf("test");
                 doReturn(mocked).when(spyRepository).lookupUser(eq(username));
-                doNothing().when(spyRepository).setUserInfo(any());
+                doNothing().when(spyRepository).setUserInfo(anyObject());
                 spyRepository.retrieveOrDefaultUser(username);
                 verify(spyRepository, times(1)).lookupUser(username);
-                verify(spyRepository, times(1)).setUserInfo(any());
+                verify(spyRepository, times(1)).setUserInfo(anyObject());
         }
 
         @Test

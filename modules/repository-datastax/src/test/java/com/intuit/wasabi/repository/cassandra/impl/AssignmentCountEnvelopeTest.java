@@ -31,6 +31,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 public class AssignmentCountEnvelopeTest {
@@ -48,8 +49,7 @@ public class AssignmentCountEnvelopeTest {
 
         doThrow(new RuntimeException("exception")).when(ar).updateBucketAssignmentCount(exp, assignment, true);
 
-        AssignmentCountEnvelope env = new AssignmentCountEnvelope(ar, cass, mysql, exp, assignment, true, el, date,
-                true, true);
+        AssignmentCountEnvelope env = new AssignmentCountEnvelope(ar, cass, mysql, exp, assignment, true, el, date, true, true);
         env.run();
     }
 
@@ -58,8 +58,7 @@ public class AssignmentCountEnvelopeTest {
 
         doThrow(new RuntimeException("exception")).when(ar).assignUserToExports(Mockito.eq(assignment), Mockito.any());
 
-        AssignmentCountEnvelope env = new AssignmentCountEnvelope(ar, cass, mysql, exp, assignment, true, el, date,
-                true, true);
+        AssignmentCountEnvelope env = new AssignmentCountEnvelope(ar, cass, mysql, exp, assignment, true, el, date, true, true);
         env.run();
     }
 }
