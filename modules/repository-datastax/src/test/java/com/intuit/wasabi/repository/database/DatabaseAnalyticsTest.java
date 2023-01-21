@@ -104,12 +104,12 @@ public class DatabaseAnalyticsTest {
         Parameters parameters = mock(Parameters.class, RETURNS_DEEP_STUBS);
 
         when(parameters.getContext().getContext()).thenReturn("TEST");
-        assertEquals(parameters.getContext().getContext(), "TESTE");
         Date from = mock(Date.class), to = mock(Date.class);
         when(parameters.getFromTime()).thenReturn(from);
         when(parameters.getToTime()).thenReturn(to);
         List<String> actions = new ArrayList<String>();
         actions.add("TEST_ACTION");
+        assertEquals(parameters.getContext().getContext(), "TEST");
         when(parameters.getActions()).thenReturn(actions);
         List<Map> expected = mock(List.class);
         when(transaction.select(anyString(), any())).thenReturn(expected);
