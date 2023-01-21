@@ -309,18 +309,18 @@ public class DatabaseExperimentRepositoryTest {
                                 .withEndTime(new Date())
                                 .withAppName(Application.Name.valueOf("TestApp")).build();
 
-                doNothing().when(transaction).insert(anyString(), Matchers.anyVararg());
+                doNothing().when(transaction).insert(anyString(), any(Any.class));
                 Experiment.ID result = repository.createExperiment(mockedNewExperiment);
                 assertThat(result, is(id));
 
-                doThrow(new DatabaseException("Test")).when(transaction).insert(anyString(), Matchers.anyVararg());
+                doThrow(new DatabaseException("Test")).when(transaction).insert(anyString(), any(Any.class));
                 BDDCatchException.when(repository).createExperiment(mockedNewExperiment);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(WasabiException.class)
                                 .hasMessage("Test")
                                 .hasNoCause();
 
-                doThrow(new RuntimeException("RTE")).when(transaction).insert(anyString(), Matchers.anyVararg());
+                doThrow(new RuntimeException("RTE")).when(transaction).insert(anyString(), any(Any.class));
                 BDDCatchException.when(repository).createExperiment(mockedNewExperiment);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(Exception.class)
@@ -335,18 +335,18 @@ public class DatabaseExperimentRepositoryTest {
                 when(mockedExperiment.getLabel()).thenReturn(Experiment.Label.valueOf("testLabel"));
                 when(mockedExperiment.getApplicationName()).thenReturn(Application.Name.valueOf("TestApp"));
                 doNothing().when(experimentValidator).validateExperiment(eq(mockedExperiment));
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(1);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(1);
                 Experiment result = repository.updateExperiment(mockedExperiment);
                 assertThat(result, is(mockedExperiment));
 
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(2);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(2);
                 BDDCatchException.when(repository).updateExperiment(mockedExperiment);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(RepositoryException.class)
                                 .hasMessage("Concurrent updates; please retry")
                                 .hasNoCause();
 
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(0);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(0);
                 BDDCatchException.when(repository).updateExperiment(mockedExperiment);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(RepositoryException.class)
@@ -359,18 +359,18 @@ public class DatabaseExperimentRepositoryTest {
                 Experiment mockedExperiment = mock(Experiment.class);
                 Experiment.State state = Experiment.State.DRAFT;
                 doNothing().when(experimentValidator).validateExperiment(eq(mockedExperiment));
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(1);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(1);
                 Experiment result = repository.updateExperimentState(mockedExperiment, state);
                 assertThat(result, is(mockedExperiment));
 
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(2);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(2);
                 BDDCatchException.when(repository).updateExperimentState(mockedExperiment, state);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(RepositoryException.class)
                                 .hasMessage("Concurrent updates; please retry")
                                 .hasNoCause();
 
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(0);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(0);
                 BDDCatchException.when(repository).updateExperimentState(mockedExperiment, state);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(RepositoryException.class)
@@ -381,18 +381,18 @@ public class DatabaseExperimentRepositoryTest {
         @Test
         public void testCreateBucket() throws Exception {
                 Bucket bucket = mock(Bucket.class, RETURNS_DEEP_STUBS);
-                doNothing().when(transaction).insert(anyString(), Matchers.anyVararg());
+                doNothing().when(transaction).insert(anyString(), any(Any.class));
                 repository.createBucket(bucket);
-                verify(transaction, atLeastOnce()).insert(anyString(), Matchers.anyVararg());
+                verify(transaction, atLeastOnce()).insert(anyString(), any(Any.class));
 
-                doThrow(new DatabaseException("db error")).when(transaction).insert(anyString(), Matchers.anyVararg());
+                doThrow(new DatabaseException("db error")).when(transaction).insert(anyString(), any(Any.class));
                 BDDCatchException.when(repository).createBucket(bucket);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(WasabiException.class)
                                 .hasMessage("db error")
                                 .hasNoCause();
 
-                doThrow(new RuntimeException("RTE")).when(transaction).insert(anyString(), Matchers.anyVararg());
+                doThrow(new RuntimeException("RTE")).when(transaction).insert(anyString(), any(Any.class));
                 BDDCatchException.when(repository).createBucket(bucket);
                 BDDCatchException.then(caughtException())
                                 .isInstanceOf(WasabiException.class)
@@ -424,7 +424,7 @@ public class DatabaseExperimentRepositoryTest {
         @Test
         public void testUpdateBucketAllocationPercentage() {
                 Bucket bucket = mock(Bucket.class, RETURNS_DEEP_STUBS);
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(1);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(1);
                 Bucket result = repository.updateBucketAllocationPercentage(bucket, 1.0);
                 assertThat(result, is(bucket));
         }
@@ -432,7 +432,7 @@ public class DatabaseExperimentRepositoryTest {
         @Test
         public void testUpdateBucketState() {
                 Bucket bucket = mock(Bucket.class, RETURNS_DEEP_STUBS);
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(1);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(1);
                 Bucket result = repository.updateBucketState(bucket, Bucket.State.OPEN);
                 assertThat(result, is(bucket));
         }
@@ -451,15 +451,15 @@ public class DatabaseExperimentRepositoryTest {
                 when(bucket.getDescription()).thenReturn("description");
                 // when(list.get(0)).thenReturn(bucket);
                 when(bucketList.getBuckets()).thenReturn(list);
-                when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(1);
+                when(transaction.update(anyString(), any(Any.class))).thenReturn(1);
                 BucketList result = repository.updateBucketBatch(Experiment.ID.newInstance(), bucketList);
                 assertThat(result, is(bucketList));
-                verify(transaction, times(1)).update(anyString(), Matchers.anyVararg());
+                verify(transaction, times(1)).update(anyString(), any(Any.class));
         }
 
     @Test
     public void testDeleteBucket() {
-        when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(0);
+        when(transaction.update(anyString(), any(Any.class))).thenReturn(0);
         BDDCatchException.when(repository).deleteBucket(Experiment.ID.newInstance(), Bucket.Label.valueOf("label"));
         BDDCatchException.then(caughtException())
                 .isInstanceOf(BucketNotFoundException.class)
@@ -469,7 +469,7 @@ public class DatabaseExperimentRepositoryTest {
 
     @Test
     public void testDeleteExperiment() {
-        when(transaction.update(anyString(), Matchers.anyVararg())).thenReturn(0);
+        when(transaction.update(anyString(), any(Any.class))).thenReturn(0);
         BDDCatchException.when(repository).deleteExperiment(
                 NewExperiment.withID(Experiment.ID.newInstance())
                         .withDescription("TEST")
@@ -500,7 +500,7 @@ public class DatabaseExperimentRepositoryTest {
                                 .isInstanceOf(ExperimentNotFoundException.class)
                                 .hasMessageContaining("Experiment")
                                 .hasNoCause();
-                verify(transaction, times(1)).select(anyString(), Matchers.anyVararg());
+                verify(transaction, times(1)).select(anyString(), any(Any.class));
 
                 when(firstQueryResult.size()).thenReturn(1);
                 List secondQueryResult = new ArrayList();
