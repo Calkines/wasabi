@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
  * Created on 3/2/16.
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DefaultCassandraHealthCheckTest {
 
     @Mock
