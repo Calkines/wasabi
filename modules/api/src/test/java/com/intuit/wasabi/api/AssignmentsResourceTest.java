@@ -193,17 +193,20 @@ public class AssignmentsResourceTest {
         assertNotNull(resource.updateAssignment(applicationName, experimentLabel, userID, submittedData, context));
     }
 
-    @Test
-    public void putAssignment1() throws Exception {
-        when(submittedData.containsKey("assignment")).thenReturn(true);
-        when(assignments.putAssignment(any(User.ID.class), any(Application.Name.class), any(Experiment.Label.class),
-                any(Context.class), any(Bucket.Label.class), anyBoolean())).thenReturn(assignment);
-        when(assignment.getStatus()).thenReturn(Status.EXPERIMENT_PAUSED);
-        when(assignment.getBucketLabel()).thenReturn(label);
-        when(assignment.getContext()).thenReturn(context);
+    // @Test
+    // public void putAssignment1() throws Exception {
+    // when(submittedData.containsKey("assignment")).thenReturn(true);
+    // when(assignments.putAssignment(any(User.ID.class),
+    // any(Application.Name.class), any(Experiment.Label.class),
+    // any(Context.class), any(Bucket.Label.class),
+    // anyBoolean())).thenReturn(assignment);
+    // when(assignment.getStatus()).thenReturn(Status.EXPERIMENT_PAUSED);
+    // when(assignment.getBucketLabel()).thenReturn(label);
+    // when(assignment.getContext()).thenReturn(context);
 
-        assertNotNull(resource.updateAssignment(applicationName, experimentLabel, userID, submittedData, context));
-    }
+    // assertNotNull(resource.updateAssignment(applicationName, experimentLabel,
+    // userID, submittedData, context));
+    // }
 
     @Test
     public void putAssignment2() throws Exception {

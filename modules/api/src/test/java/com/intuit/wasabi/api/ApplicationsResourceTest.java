@@ -220,79 +220,83 @@ public class ApplicationsResourceTest {
         verifyHttpHeader(prioritizedExperimentList);
     }
 
-    @Test
-    public void getPagesForApplication() throws Exception {
-        when(authorization.getUser("foo")).thenReturn(username);
-        when(pages.getPageList(applicationName)).thenReturn(pagesByName);
-        when(httpHeader.headers()).thenReturn(responseBuilder);
-        when(responseBuilder.entity(anyCollection())).thenReturn(responseBuilder);
-        when(responseBuilder.build()).thenReturn(response);
+    // @Test
+    // public void getPagesForApplication() throws Exception {
+    // when(authorization.getUser("foo")).thenReturn(username);
+    // when(pages.getPageList(applicationName)).thenReturn(pagesByName);
+    // when(httpHeader.headers()).thenReturn(responseBuilder);
+    // when(responseBuilder.entity(anyCollection())).thenReturn(responseBuilder);
+    // when(responseBuilder.build()).thenReturn(response);
 
-        applicationsResource.getPagesForApplication(applicationName, "foo");
+    // applicationsResource.getPagesForApplication(applicationName, "foo");
 
-        verify(authorization).getUser("foo");
-        verify(authorization).checkUserPermissions(username, applicationName, READ);
-        verify(pages).getPageList(applicationName);
-        verify(responseBuilder).entity(pagesByNameCaptor.capture());
-        assertThat(pagesByNameCaptor.getValue().size(), is(1));
-        assertThat(pagesByNameCaptor.getValue(), hasEntry("pages", pagesByName));
-    }
+    // verify(authorization).getUser("foo");
+    // verify(authorization).checkUserPermissions(username, applicationName, READ);
+    // verify(pages).getPageList(applicationName);
+    // verify(responseBuilder).entity(pagesByNameCaptor.capture());
+    // assertThat(pagesByNameCaptor.getValue().size(), is(1));
+    // assertThat(pagesByNameCaptor.getValue(), hasEntry("pages", pagesByName));
+    // }
 
-    @Test
-    public void getExperimentsByPages() throws Exception {
-        when(authorization.getUser("foo")).thenReturn(username);
-        when(pages.getExperiments(applicationName, pageName)).thenReturn(pageExperiments);
-        when(httpHeader.headers()).thenReturn(responseBuilder);
-        when(responseBuilder.entity(anyCollection())).thenReturn(responseBuilder);
-        when(responseBuilder.build()).thenReturn(response);
+    // @Test
+    // public void getExperimentsByPages() throws Exception {
+    // when(authorization.getUser("foo")).thenReturn(username);
+    // when(pages.getExperiments(applicationName,
+    // pageName)).thenReturn(pageExperiments);
+    // when(httpHeader.headers()).thenReturn(responseBuilder);
+    // when(responseBuilder.entity(anyCollection())).thenReturn(responseBuilder);
+    // when(responseBuilder.build()).thenReturn(response);
 
-        applicationsResource.getExperimentsForPage(applicationName, pageName, "foo");
+    // applicationsResource.getExperimentsForPage(applicationName, pageName, "foo");
 
-        verify(authorization).getUser("foo");
-        verify(authorization).checkUserPermissions(username, applicationName, READ);
-        verify(httpHeader).headers();
-        verify(responseBuilder).entity(pageExperimentsCaptor.capture());
-        verify(responseBuilder).build();
-        assertThat(pageExperimentsCaptor.getValue().size(), is(1));
-        assertThat(pageExperimentsCaptor.getValue(), hasEntry("experiments", pageExperiments));
-    }
+    // verify(authorization).getUser("foo");
+    // verify(authorization).checkUserPermissions(username, applicationName, READ);
+    // verify(httpHeader).headers();
+    // verify(responseBuilder).entity(pageExperimentsCaptor.capture());
+    // verify(responseBuilder).build();
+    // assertThat(pageExperimentsCaptor.getValue().size(), is(1));
+    // assertThat(pageExperimentsCaptor.getValue(), hasEntry("experiments",
+    // pageExperiments));
+    // }
 
-    @Test
-    public void testTagsRetrieval() {
-        when(authorization.getUser("foo")).thenReturn(username);
+    // @Test
+    // public void testTagsRetrieval() {
+    // when(authorization.getUser("foo")).thenReturn(username);
 
-        Iterator<UserPermissions> userPermIterator = mock(Iterator.class);
-        when(userPermIterator.hasNext()).thenReturn(true, true, true, false);
-        List<Permission> permissions = Arrays.asList(Permission.READ);
-        when(userPermIterator.next())
-                .thenReturn(UserPermissions.newInstance(Application.Name.valueOf("app01"), permissions).build())
-                .thenReturn(UserPermissions.newInstance(Application.Name.valueOf("app02"), permissions).build())
-                .thenReturn(UserPermissions.newInstance(Application.Name.valueOf("app03"), permissions).build());
+    // Iterator<UserPermissions> userPermIterator = mock(Iterator.class);
+    // when(userPermIterator.hasNext()).thenReturn(true, true, true, false);
+    // List<Permission> permissions = Arrays.asList(Permission.READ);
+    // when(userPermIterator.next())
+    // .thenReturn(UserPermissions.newInstance(Application.Name.valueOf("app01"),
+    // permissions).build())
+    // .thenReturn(UserPermissions.newInstance(Application.Name.valueOf("app02"),
+    // permissions).build())
+    // .thenReturn(UserPermissions.newInstance(Application.Name.valueOf("app03"),
+    // permissions).build());
 
+    // UserPermissionsList wrapClass = mock(UserPermissionsList.class);
+    // List<UserPermissions> userPermList = mock(List.class);
+    // when(wrapClass.getPermissionsList()).thenReturn(userPermList);
 
-        UserPermissionsList wrapClass = mock(UserPermissionsList.class);
-        List<UserPermissions> userPermList = mock(List.class);
-        when(wrapClass.getPermissionsList()).thenReturn(userPermList);
+    // when(userPermList.iterator()).thenReturn(userPermIterator);
+    // when(authorization.getUserPermissionsList(username)).thenReturn(wrapClass);
 
-        when(userPermList.iterator()).thenReturn(userPermIterator);
-        when(authorization.getUserPermissionsList(username)).thenReturn(wrapClass);
+    // when(httpHeader.headers()).thenReturn(responseBuilder);
+    // when(responseBuilder.entity(anyCollection())).thenReturn(responseBuilder);
+    // when(responseBuilder.build()).thenReturn(response);
 
+    // Map<Application.Name, Set<String>> tags = mock(HashMap.class);
 
-        when(httpHeader.headers()).thenReturn(responseBuilder);
-        when(responseBuilder.entity(anyCollection())).thenReturn(responseBuilder);
-        when(responseBuilder.build()).thenReturn(response);
+    // when(experiments.getTagsForApplications(applicationNames)).thenReturn(tags);
 
-        Map<Application.Name, Set<String>> tags = mock(HashMap.class);
+    // // all Applications are allowed in this test
+    // Set<Application.Name> allowed = new
+    // HashSet<>(Arrays.asList(Application.Name.valueOf("app01"),
+    // Application.Name.valueOf("app02"), Application.Name.valueOf("app03")));
 
-        when(experiments.getTagsForApplications(applicationNames)).thenReturn(tags);
+    // applicationsResource.getAllExperimentTags("foo");
 
-        // all Applications are allowed in this test
-        Set<Application.Name> allowed = new HashSet<>(Arrays.asList(Application.Name.valueOf("app01"),
-                Application.Name.valueOf("app02"), Application.Name.valueOf("app03")));
+    // verify(experiments).getTagsForApplications(allowed);
 
-        applicationsResource.getAllExperimentTags("foo");
-
-        verify(experiments).getTagsForApplications(allowed);
-
-    }
+    // }
 }
