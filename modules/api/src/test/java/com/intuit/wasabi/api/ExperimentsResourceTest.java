@@ -1030,7 +1030,7 @@ public class ExperimentsResourceTest {
         UserInfo userInfo = UserInfo.from(UserInfo.Username.valueOf(USERPASS)).build();
 
         when(experiments.getExperiment(experiment.getID())).thenReturn(experiment);
-        when(buckets.createBucket(argThat(equalTo(experiment.getID())),
+        when(buckets.createBucket(experiment.getID(),
                 Mockito.any(Bucket.class), Mockito.any(UserInfo.class))).thenReturn(bucket);
         when(uriInfo.getAbsolutePathBuilder()).thenReturn(fromPath(PATH));
         UserInfo.Username subject = UserInfo.Username.valueOf("auser");
