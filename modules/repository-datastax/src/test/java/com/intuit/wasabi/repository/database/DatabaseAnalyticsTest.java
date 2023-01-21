@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -112,6 +113,7 @@ public class DatabaseAnalyticsTest {
         when(transaction.select(anyString(), any())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getActionsRows(experimentId,
                 parameters);
+        assertEquals(result, "teste");
         // assertThat(result, is(expected));
         // // exception while select
         doThrow(new RuntimeException()).when(transaction)
