@@ -108,20 +108,20 @@ public class ExperimentsImplTest {
         description = "Some description";
     }
 
-    // @Test(expected = InvalidIdentifierException.class)
-    // public void testCreateExperimentFailedValidator() {
-    // NewExperiment testExp = NewExperiment.withID(experimentID)
-    // .withAppName(testApp)
-    // .withLabel(testLabel)
-    // .withSamplingPercent(samplingPercent)
-    // .withStartTime(startTime)
-    // .withEndTime(endTime)
-    // .withDescription(description).build();
-    // testExp.setApplicationName(Application.Name.valueOf(""));
-    // assertThat(testExp.getApplicationName(), is(Application.Name.valueOf("")));
-    // expImpl.createExperiment(testExp,
-    // UserInfo.from(UserInfo.Username.valueOf("user")).build());
-    // }
+    @Test(expected = InvalidIdentifierException.class)
+    public void testCreateExperimentFailedValidator() {
+        NewExperiment testExp = NewExperiment.withID(experimentID)
+                .withAppName(testApp)
+                .withLabel(testLabel)
+                .withSamplingPercent(samplingPercent)
+                .withStartTime(startTime)
+                .withEndTime(endTime)
+                .withDescription(description).build();
+        testExp.setApplicationName(Application.Name.valueOf(""));
+        assertThat(testExp.getApplicationName(), is(Application.Name.valueOf("")));
+        expImpl.createExperiment(testExp,
+                UserInfo.from(UserInfo.Username.valueOf("user")).build());
+    }
 
     // @Test
     // public void testCreateExperimentFailedCassandraCreation() {
