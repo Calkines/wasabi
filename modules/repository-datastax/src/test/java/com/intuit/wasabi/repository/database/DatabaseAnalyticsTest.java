@@ -31,6 +31,7 @@ import org.mockito.Mockito;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -119,7 +120,7 @@ public class DatabaseAnalyticsTest {
         when(transaction.select(anyString(), any())).thenReturn(expected);
         List<Map> result = databaseAnalytics.getActionsRows(experimentId,
                 parameters);
-        assertEquals(result, mock(List.class));
+        assertEquals(result, Collections.emptyList());
         // assertThat(result, is(expected));
         // // exception while select
         // doThrow(new RuntimeException()).when(transaction)
