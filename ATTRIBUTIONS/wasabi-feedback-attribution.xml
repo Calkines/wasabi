@@ -1547,7 +1547,7 @@
          <name>Mockito</name>
          <groupId>org.mockito</groupId>
          <artifactId>mockito-core</artifactId>
-         <version>1.10.19</version>
+         <version>5.0.0</version>
          <projectUrl>http://www.mockito.org</projectUrl>
          <type>jar</type>
          <licenses>
